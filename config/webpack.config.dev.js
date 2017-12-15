@@ -12,6 +12,10 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+function resolveDir (dir) {
+  return path.join(__dirname, '..', dir)
+}
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -84,10 +88,16 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
-      
+
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
+      '@': resolveDir('src'),
+      'component': resolveDir('src/component'),
+      'container': resolveDir('src/container'),
+      'store': resolveDir('src/store'),
+      'common': resolveDir('src/common'),
+      'api': resolveDir('src/api'),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -115,7 +125,7 @@ module.exports = {
             options: {
               formatter: eslintFormatter,
               eslintPath: require.resolve('eslint'),
-              
+
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -144,7 +154,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
@@ -187,6 +197,22 @@ module.exports = {
                 },
               },
             ],
+          },
+          {
+            test: /\.scss$/,
+            use: [{
+                loader: "style-loader" // 将 JS 字符串生成为 style 节点
+            }, {
+                loader: "css-loader", // 将 CSS 转化成 CommonJS 模块
+                options: {
+                  sourceMap: true
+                }
+            }, {
+                loader: "sass-loader", // 将 Sass 编译成 CSS
+                options: {
+                  sourceMap: true
+                }
+            }]
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.

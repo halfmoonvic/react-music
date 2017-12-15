@@ -1,0 +1,79 @@
+/**
+ * ****************************************
+ * *************** 布局相关尺寸 *************
+ * ****************************************
+ */
+// 页面整理的宽度 是 1200 还是自适应
+$site-width: 80%;
+
+/**
+ * ****************************************
+ * *************** 颜色定义规范 *************
+ * ****************************************
+ */
+// 字体颜色
+$cl-txt: #333;
+$cl-txt-hl: #00ffff;
+
+// 三种边框颜色
+$cl-bd-cyan: #0ff;
+$cl-bd-cyan-d: rgba(0, 255, 255, .5);
+$cl-bd-red: #f1174f;
+$cl-bd-red-d: rgba(241, 23, 79, .5);
+$cl-bd-blue: #007dfd;
+$cl-bd-blue-d: rgba(0, 125, 253, .5);
+$cl-bd-green: #00ffb4;
+$cl-bd-green-d: rgba(0, 255, 180, .5);
+$cl-bd-shengreen: #23ff2e;
+$cl-bd-shengreen-d: rgba(35, 255, 46, .5);
+$cl-bd-pure: #00bdff;
+$cl-bd-pure-d: rgba(0, 189, 255, .5);
+
+// 背景色
+$cl-bg: rgba(0, 76, 152, .2);
+
+// 颜色定义规范
+$color-background: #222;
+$color-background-d: rgba(0, 0, 0, 0.3);
+$color-highlight-background: #333;
+$color-dialog-background: #666;
+$color-theme: #ffcd32;
+$color-theme-d: rgba(255, 205, 49, 0.5);
+$color-sub-theme: #d93f30;
+$color-text: #fff;
+$color-text-d: rgba(255, 255, 255, 0.3);
+$color-text-l: rgba(255, 255, 255, 0.5);
+$color-text-ll: rgba(255, 255, 255, 0.8);
+
+
+/**
+ * ****************************************
+ * *************** 字体定义规范 *************
+ * ****************************************
+ */
+// 释义
+// smallest   st       最小
+// smaller    sr       比较小
+// small      sm       小        默认为 body 下面的字体大小
+// medium     md       中等
+// large      lg       大
+// larger     lr       比较大
+// largest    lt       最大
+
+// 普通屏幕字体大小
+$fz-st: 10px;
+$fz-sr: 12px;
+$fz-sm: 14px;
+$fz-md: 16px;
+$fz-lg: 18px;
+$fz-lr: 22px;
+$fz-lt: 36px;
+
+// 大屏大字体
+// $fz-ss: 12px;
+// $fz-xs: 16px;
+// $fz-sm: 18px;
+// $fz-md: 24px;
+// $fz-lg: 28px;
+// $fz-gg: 36px;
+// $fz-vg: 46px;
