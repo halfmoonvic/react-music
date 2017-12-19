@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import Header from 'container/header/header'
 import Tab from 'component/tab/tab'
 /**** 当前组件的 子组件等 ***/
-// import TestRedux from './store/test-redux.js'
+import Recommend from 'container/recommend/recommend'
 
 class App extends Component {
   render() {
@@ -19,6 +19,7 @@ class App extends Component {
           <Header></Header>
           <Tab></Tab>
           <Switch>
+            <Recommend></Recommend>
           </Switch>
         </div>
       </Router>
