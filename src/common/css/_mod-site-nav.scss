@@ -1,0 +1,19 @@
+@import "./lib-variable";
+@import "./lib-mixin";
+
+.c-site-nav {
+  @include flex(space-between);
+  height: 44px;
+  line-height: 44px;
+  .site-nav__item {
+    flex: 1 1 1px;
+    text-align: center;
+    font-size: 14px;
+    &.selected {
+      .site-nav__text {
+        color: #ffcd32;
+        border-bottom: 2px solid #ffcd32;
+      }
+    }
+  }
+}

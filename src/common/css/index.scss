@@ -1,17 +1,9 @@
-// 重置浏览器样式  reset.scss 为pc端重置样式库
-@import "./reset.sass";
+// lib 公共样式等
+@import "./lib-reset.sass";   // 重置浏览器样式  reset.scss 为pc端重置样式库
+@import "./lib-base";         // 针对 UI 设计稿而做的一些样式重置
+@import "./lib-iconfont";     // font 字体
+@import "./lib-public";       // 公共样式
+@import "./lib-frame";        // 页面框架布局样式
+@import "./lib-button";       // 具体功能组件样式
 
-// 针对 UI 设计稿而做的一些样式重置
-@import "./base";
-
-// font 字体
-@import "./iconfont";
-
-// 公共样式
-@import "./public";
-
-// 页面框架布局样式
-@import "./frame";
-
-// 具体功能组件样式
-@import "./button";
+@import "./mod-site-nav";     // 网站 tab 标签导航
