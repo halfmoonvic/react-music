@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 /******* 第三方 组件库 *****/
-import classNames from "classnames";
+import classNames from "classnames"
 /**** 本地公用变量 公用函数 **/
 /******* 本地 公用组件 *****/
 /**** 当前组件的 子组件等 ***/

@@ -6,22 +6,47 @@ import React, { Component } from 'react'
 import { ERR_OK } from 'api/config'
 import { getRecommend } from 'api/recommend'
 /******* 本地 公用组件 *****/
+import Slider from 'component/slider/slider'
 /**** 当前组件的 子组件等 ***/
 
 class Recommend extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      recommend: []
+    }
+  }
   componentDidMount() {
     this._getRecommend()
   }
   _getRecommend() {
     getRecommend().then(res => {
       if (res.code === ERR_OK) {
-        console.log(res.data)
+        this.setState({
+          recommend: res.data.slider
+        })
       }
     })
   }
   render() {
     return (
-      <div>Recommend-页面</div>
+      <div className="c-recommend">
+        <div className="recommend--content">
+          {this.state.recommend.length ? <div className="recommend__slider">
+            <Slider>{
+              this.state.recommend.map((v, i) => (
+                <a key={v.id} href={v.linkUrl}>
+                  <img src={v.picUrl} alt="" />
+                </a>
+              ))
+            }</Slider>
+          </div> : null}
+          <div className="recommend__list">
+            <div className="list__title">热门歌单推荐</div>
+            <ul></ul>
+          </div>
+        </div>
+      </div>
     )
   }
 }

@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 /**** 本地公用变量 公用函数 **/
 /******* 本地 公用组件 *****/
 import Header from 'container/header/header'
-import Tab from 'component/tab/tab'
+import Tab from 'container/tab/tab'
 /**** 当前组件的 子组件等 ***/
 import Recommend from 'container/recommend/recommend'
 
@@ -19,7 +19,8 @@ class App extends Component {
           <Header></Header>
           <Tab></Tab>
           <Switch>
-            <Recommend></Recommend>
+            <Redirect path='/' exact to='/recommend'></Redirect>
+            <Route path="/recommend" component={Recommend}></Route>
           </Switch>
         </div>
       </Router>
