@@ -1,13 +1,14 @@
 /**** React应用依赖组件 ****/
 // core
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 /******* 第三方 组件库 *****/
 import classNames from "classnames"
 /**** 本地公用变量 公用函数 **/
 /******* 本地 公用组件 *****/
 /**** 当前组件的 子组件等 ***/
 
+@withRouter
 class Tab extends Component {
   constructor(props) {
     super(props)
@@ -18,7 +19,7 @@ class Tab extends Component {
         text: '推荐',
         selected: false
       }, {
-        url: '/songer',
+        url: '/singer',
         text: '歌手',
         selected: false
       }, {
@@ -32,13 +33,19 @@ class Tab extends Component {
       }]
     }
   }
+  componentDidMount() {
+    const { pathname } = this.props.history.location
+    const initIndex = this.state.navList.findIndex(v => v.url === pathname)
+    this.setState({
+      navIndex: initIndex
+    })
+  }
   handleActive(i) {
     this.setState({
       navIndex: i
     })
   }
   render() {
-
     return (
       <ul className="c-site-nav">
         {this.state.navList.map((v, i) => (

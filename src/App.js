@@ -10,6 +10,7 @@ import Header from 'container/header/header'
 import Tab from 'container/tab/tab'
 /**** 当前组件的 子组件等 ***/
 import Recommend from 'container/recommend/recommend'
+import Singer from 'container/singer/singer'
 
 class App extends Component {
   render() {
@@ -21,6 +22,7 @@ class App extends Component {
           <Switch>
             <Redirect path='/' exact to='/recommend'></Redirect>
             <Route path="/recommend" component={Recommend}></Route>
+            <Route path="/singer" component={Singer}></Route>
           </Switch>
         </div>
       </Router>
