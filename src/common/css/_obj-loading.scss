@@ -1,0 +1,12 @@
+@import "./_lib-variable.scss";
+@import "./_lib-mixin.scss"
+
+.o-loading {
+  width: 100%;
+  text-align: center;
+  .loading__desc {
+    line-height: 20px;
+    font-size: $font-size-small;
+    color: $color-text-l;
+  }
+}

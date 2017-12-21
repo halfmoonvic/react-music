@@ -6,7 +6,7 @@
   width: 100%;
   top: 88px;
   bottom: 0;
-  .recommend--content {
+  .recommend__content {
     height: 100%;
     overflow: hidden;
     .recommend__slider {
@@ -22,6 +22,39 @@
         font-size: 14px;
         color: #ffcd32;
       }
+      .list__item {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 20px;
+        .item__icon {
+          flex: 0 0 60px;
+          width: 60px;
+          padding-right: 20px;
+        }
+        .item__text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          flex: 1;
+          line-height: 20px;
+          overflow: hidden;
+          font-size: 14px;
+          .text__name {
+            margin-bottom: 10px;
+            color: #fff;
+          }
+          .text__desc {
+            color: hsla(0, 0%, 100%, .3);
+          }
+        }
+      }
+    }
+    .loading-container {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
     }
   }
 }
