@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
 import { ERR_OK } from 'api/config'
-import { getRecommend } from 'api/recommend'
+import { getRecommend, getDiscList } from 'api/recommend'
 /******* 本地 公用组件 *****/
 import Slider from 'component/slider/slider'
 /**** 当前组件的 子组件等 ***/
@@ -18,6 +18,7 @@ class Recommend extends Component {
   }
   componentDidMount() {
     this._getRecommend()
+    this._getDiscList()
   }
   _getRecommend() {
     getRecommend().then(res => {
@@ -25,6 +26,13 @@ class Recommend extends Component {
         this.setState({
           recommend: res.data.slider
         })
+      }
+    })
+  }
+  _getDiscList() {
+    getDiscList().then(res => {
+      if (res.status === 200) {
+        console.log(res)
       }
     })
   }
