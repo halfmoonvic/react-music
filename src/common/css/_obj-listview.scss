@@ -1,0 +1,36 @@
+@import "./lib-variable";
+@import "./lib-mixin";
+
+.o-listview {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #222;
+  .listview__group {
+    padding-bottom: 30px;
+    .group__title {
+      height: 30px;
+      line-height: 30px;
+      padding-left: 20px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      background: #333;
+    }
+    .group__item {
+      display: flex;
+      align-items: center;
+      padding: 20px 0 0 30px;
+      .item__avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+      .item__name {
+        margin-left: 20px;
+        color: rgba(255,255,255,0.5);
+        font-size: 14px;
+      }
+    }
+  }
+}

@@ -11,7 +11,8 @@ class Scroll extends Component {
   static defaultProps = {
     probeType: 1,
     click: true,
-    data: []
+    data: [],
+    listenScroll: false
   }
   componentDidMount() {
     let me = this
@@ -24,11 +25,14 @@ class Scroll extends Component {
   }
   shouldComponentUpdate(nextProps, nextState) {
     let me = this
+    // 刷新
     if (nextProps.data !== this.props.data) {
       setTimeout(() => {
         me.refresh()
       }, 20)
     }
+
+    //
     return true
   }
   _initScroll() {
@@ -40,6 +44,13 @@ class Scroll extends Component {
       probeType: me.props.probeType,
       click: me.props.click
     })
+
+      this.scroll.on("scroll", (pos) => {
+        this.props.onScroll(pos)
+      })
+    if (this.props.onScroll) {
+    }
+
   }
   enable() {
     let me = this

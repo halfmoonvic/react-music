@@ -5,7 +5,9 @@ import React, { Component } from 'react'
 /**** 本地公用变量 公用函数 **/
 import { getSingerList } from 'api/singer'
 import { ERR_OK } from 'api/config'
+import Singers from 'common/js/singer'
 /******* 本地 公用组件 *****/
+import ListView from 'component/listview/listview'
 /**** 当前组件的 子组件等 ***/
 
 const HOT_NAME = '热门'
@@ -25,9 +27,8 @@ class Singer extends Component {
     getSingerList().then(res => {
       if (res.code === ERR_OK) {
         this.setState({
-          singers: res.data.list
+          singers: this._normalizeSinger(res.data.list)
         })
-        console.log(this._normalizeSinger(res.data.list))
       }
     })
   }
@@ -41,7 +42,7 @@ class Singer extends Component {
     list.forEach((item, index) => {
       // 热门数据
       if (index < HOT_SINGER_LEN) {
-        map.hot.items.push(new Singer({
+        map.hot.items.push(new Singers({
           id: item.Fsinger_mid,
           name: item.Fsinger_name
         }))
@@ -54,7 +55,7 @@ class Singer extends Component {
           items: []
         }
       }
-      map[key].items.push(new Singer({
+      map[key].items.push(new Singers({
         id: item.Fsinger_mid,
         name: item.Fsinger_name
       }))
@@ -79,7 +80,9 @@ class Singer extends Component {
   }
   render() {
     return (
-      <div className="o-singer">Singer-页面</div>
+      <div className="c-singer">
+        <ListView data={this.state.singers}></ListView>
+      </div>
     )
   }
 }

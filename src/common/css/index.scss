@@ -7,6 +7,8 @@
 @import "./lib-button";       // 具体功能组件样式
 
 @import "./obj-slider.sass";       // 轮播图组件
+@import "./_obj-listview.scss";      // list-view 组件
 
 @import "./mod-site-nav";     // 网站 tab 标签导航
 @import "./mod-recommend";    // 热门歌曲推荐
+@import "./mod-singer";
