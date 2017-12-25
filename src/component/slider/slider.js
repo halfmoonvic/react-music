@@ -46,6 +46,10 @@ class Slider extends Component {
       me.slider.refresh()
     })
   }
+  componentWillUnmount() {
+    this.slider.disable()
+    clearTimeout(this.timer)
+  }
   _setSliderWidth() {
     this.children = this.refs.sliderGroup.children
     let width = 0
