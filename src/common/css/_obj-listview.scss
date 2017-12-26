@@ -33,4 +33,26 @@
       }
     }
   }
+  .list-shortcut {
+    position: absolute;
+    z-index: 30;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    padding: 20px 0;
+    border-radius: 10px;
+    text-align: center;
+    background: rgba(0,0,0,0.3);
+    font-family: Helvetica;
+    .shortcutList__item {
+      padding: 3px;
+      line-height: 1;
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      &.shortcutList__item--current {
+        color: #ffcd32;
+      }
+    }
+  }
 }

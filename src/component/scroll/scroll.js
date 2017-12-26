@@ -45,10 +45,10 @@ class Scroll extends Component {
       click: me.props.click
     })
 
-      this.scroll.on("scroll", (pos) => {
-        this.props.onScroll(pos)
+    if (this.props.listenScroll) {
+      me.scroll.on("scroll", (pos) => {
+        me.props.scroll(pos)
       })
-    if (this.props.onScroll) {
     }
 
   }
@@ -63,6 +63,14 @@ class Scroll extends Component {
   refresh() {
     let me = this
     me.scroll && me.scroll.refresh()
+  }
+  scrollTo() {
+    let me = this
+    me.scroll && me.scroll.scrollTo.apply(me.scroll, arguments)
+  }
+  scrollToElement() {
+    let me = this
+    me.scroll && me.scroll.scrollToElement.apply(me.scroll, arguments)
   }
   render() {
     return (

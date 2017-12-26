@@ -2,6 +2,7 @@
 // core
 import React, { Component } from 'react'
 /******* 第三方 组件库 *****/
+import LazyLoad, { forceCheck } from 'react-lazyload'
 /**** 本地公用变量 公用函数 **/
 import { ERR_OK } from 'api/config'
 import { getRecommend, getDiscList } from 'api/recommend'
@@ -47,7 +48,12 @@ class Recommend extends Component {
     }
     return (
       <div className="c-recommend">
-        <Scroll className="recommend__content" data={this.state.discList}>
+        <Scroll
+        probeType={3}
+        className="recommend__content"
+        data={this.state.discList}
+        listenScroll={true}
+        scroll={() => {forceCheck()}}>
           <div>
             <div className="recommend__slider">
               <Slider>{this.state.recommend.map((v, i) => (
@@ -61,7 +67,9 @@ class Recommend extends Component {
               <ul>{this.state.discList.length ? this.state.discList.map(v => (
                 <li className="list__item" key={v.dissid}>
                   <div className="item__icon">
-                    <img src={v.imgurl} width="60" height="60" alt=""/>
+                    <LazyLoad offset={100}>
+                      <img src={v.imgurl} width="60" height="60" alt=""/>
+                    </LazyLoad>
                   </div>
                   <div className="item__text">
                     <h2 className="text__name">{v.creator.name}</h2>
