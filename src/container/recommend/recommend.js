@@ -67,7 +67,7 @@ class Recommend extends Component {
               <ul>{this.state.discList.length ? this.state.discList.map(v => (
                 <li className="list__item" key={v.dissid}>
                   <div className="item__icon">
-                    <LazyLoad offset={100}>
+                    <LazyLoad height={0} offset={100}>
                       <img src={v.imgurl} width="60" height="60" alt=""/>
                     </LazyLoad>
                   </div>

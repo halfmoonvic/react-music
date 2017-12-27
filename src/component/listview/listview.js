@@ -7,6 +7,7 @@ import LazyLoad, { forceCheck } from 'react-lazyload'
 /**** 本地公用变量 公用函数 **/
 import { getData } from 'common/js/dom'
 /******* 本地 公用组件 *****/
+import Loading from 'component/loading/loading'
 import Scroll from 'component/scroll/scroll'
 /**** 当前组件的 子组件等 ***/
 
@@ -173,6 +174,9 @@ class ListView extends Component {
         <div className="list-fixed">
           {this.state.fixedTitle !== '热门' ? <h1 className="fixed-title">{this.state.fixedTitle}</h1> : null}
         </div>
+        {!this.props.data.length ? <div className="loading-container">
+          <Loading></Loading>
+        </div> : null}
       </Scroll>
     )
   }
