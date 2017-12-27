@@ -1,6 +1,7 @@
 /**** React应用依赖组件 ****/
 // core
 import React, { Component } from 'react'
+import { withRouter, Route } from 'react-router-dom'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
 import { getSingerList } from 'api/singer'
@@ -9,16 +10,20 @@ import Singers from 'common/js/singer'
 /******* 本地 公用组件 *****/
 import ListView from 'component/listview/listview'
 /**** 当前组件的 子组件等 ***/
+import SingerDetail from 'container/singer-deatil/singer-detail'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
+@withRouter
 class Singer extends Component {
   constructor(props) {
     super(props)
     this.state = {
       singers: []
     }
+
+    this.selectSinger = this.selectSinger.bind(this)
   }
   componentDidMount() {
     this._getSingerList()
@@ -31,6 +36,10 @@ class Singer extends Component {
         })
       }
     })
+  }
+  selectSinger(singer) {
+    console.log(singer)
+    this.props.history.push(`/singer/${singer.id}`)
   }
   _normalizeSinger(list) {
     let map = {
@@ -81,7 +90,8 @@ class Singer extends Component {
   render() {
     return (
       <div className="c-singer">
-        <ListView data={this.state.singers}></ListView>
+        <ListView data={this.state.singers} select={this.selectSinger}></ListView>
+        <Route path={`${this.props.match.url}/:id`} component={SingerDetail}></Route>
       </div>
     )
   }

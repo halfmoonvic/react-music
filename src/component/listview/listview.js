@@ -170,7 +170,7 @@ class ListView extends Component {
               <h2 className="group__title">{group.title}</h2>
               <ul>{
                 group.items.map(item => (
-                  <li key={item.id} className="group__item">
+                  <li key={item.id} className="group__item" onClick={() => this.props.select(item)}>
                     <LazyLoad height={50}>
                       <img className="item__avatar" src={item.avatar} alt=""/>
                     </LazyLoad>
