@@ -6,6 +6,8 @@
 @import "./lib-frame";        // 页面框架布局样式
 @import "./lib-button";       // 具体功能组件样式
 
+@import "./_animate";         // 动画
+
 @import "./obj-slider.sass";       // 轮播图组件
 @import "./_obj-listview.scss";      // list-view 组件
 

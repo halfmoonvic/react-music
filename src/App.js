@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 // router
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
 /******* 本地 公用组件 *****/
@@ -19,11 +20,18 @@ class App extends Component {
         <div className="app">
           <Header></Header>
           <Tab></Tab>
-          <Switch>
-            <Redirect path='/' exact to='/recommend'></Redirect>
-            <Route path="/recommend" component={Recommend}></Route>
-            <Route path="/singer" component={Singer}></Route>
-          </Switch>
+          <TransitionGroup>
+            <CSSTransition
+              classNames="fade"
+              timeout={{enter: 500, exit: 300}}
+            >
+              <Switch>
+                <Redirect path='/' exact to='/recommend'></Redirect>
+                <Route path="/recommend" component={Recommend}></Route>
+                <Route path="/singer" component={Singer}></Route>
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
         </div>
       </Router>
     )

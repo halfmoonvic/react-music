@@ -9,7 +9,7 @@ import React, { Component } from 'react'
 class SingerDetail extends Component {
   render() {
     return (
-      <div className="c-music-list">SingerDetail-页面</div>
+      <div className="c-singer-detailt">SingerDetail-页面</div>
     )
   }
 }

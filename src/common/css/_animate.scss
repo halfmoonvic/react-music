@@ -1,0 +1,33 @@
+@import './lib-variable';
+@import './lib-mixin';
+
+.fade-enter {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.fade-enter.fade-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all .5s ease-in;
+}
+
+.fade-exit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-exit, .fade-exit-active {
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: all .3s ease-out;
+}
+
+
+.fade-appear {
+    opacity: 0.01;
+}
+.fade-appear.fade-appear-active {
+    opacity: 1;
+    transition: opacity .5s ease-in;
+}
