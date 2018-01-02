@@ -1,7 +1,7 @@
 /**** React应用依赖组件 ****/
 // core
 import React, { Component } from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 /******* 第三方 组件库 *****/
 import classNames from "classnames"
 /**** 本地公用变量 公用函数 **/
@@ -33,23 +33,25 @@ class Tab extends Component {
       }]
     }
   }
-  componentDidMount() {
-    const { pathname } = this.props.history.location
-    const initIndex = this.state.navList.findIndex(v => v.url === pathname)
-    this.setState({
-      navIndex: initIndex
-    })
-  }
-  handleActive(i) {
-    this.setState({
-      navIndex: i
-    })
-  }
+  // componentDidMount() {
+  //   const { pathname } = this.props.history.location
+  //   const initIndex = this.state.navList.findIndex(v => v.url === pathname)
+  //   this.setState({
+  //     navIndex: initIndex
+  //   })
+  // }
+  // handleActive(i) {
+  //   this.setState({
+  //     navIndex: i
+  //   })
+  // }
   render() {
     return (
       <ul className="c-site-nav">
         {this.state.navList.map((v, i) => (
-          <li className={classNames('site-nav__item', {'selected': i === this.state.navIndex})} onClick={() => {this.handleActive(i)}} key={v.url}><Link className="site-nav__text" to={v.url}>{v.text}</Link></li>
+          <li className={classNames('site-nav__item')} key={v.url}>
+            <NavLink className="site-nav__text" activeClassName="selected" to={v.url}>{v.text}</NavLink>
+          </li>
         ))}
       </ul>
     )

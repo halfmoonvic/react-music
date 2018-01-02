@@ -2,6 +2,7 @@
 // core
 import React, { Component } from 'react'
 import { withRouter, Route } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
 import { getSingerList } from 'api/singer'
@@ -20,7 +21,8 @@ class Singer extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      singers: []
+      singers: [],
+      singerDetailFlag: false
     }
 
     this.selectSinger = this.selectSinger.bind(this)
@@ -38,7 +40,7 @@ class Singer extends Component {
     })
   }
   selectSinger(singer) {
-    console.log(singer)
+    this.setState({ singerDetailFlag: true })
     this.props.history.push(`/singer/${singer.id}`)
   }
   _normalizeSinger(list) {
@@ -91,7 +93,15 @@ class Singer extends Component {
     return (
       <div className="c-singer">
         <ListView data={this.state.singers} select={this.selectSinger}></ListView>
-        <Route path={`${this.props.match.url}/:id`} component={SingerDetail}></Route>
+        {/*<Route path={`${this.props.match.url}/:id`} component={SingerDetail}></Route>*/}
+        <CSSTransition
+          key={2}
+          in={this.state.singerDetailFlag}
+          timeout={1000}
+          classNames="fade"
+        >
+          <Route path={`${this.props.match.url}/:id`} component={SingerDetail}></Route>
+        </CSSTransition>
       </div>
     )
   }

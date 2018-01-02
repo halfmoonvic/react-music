@@ -17,10 +17,8 @@
       height: 44px;
       border-bottom: 2px transparent;
       box-sizing: border-box;
-    }
-    &.selected {
-      .site-nav__text {
-        color: #ffcd32;
+      &.selected {
+        color: #ffcd32 !important;
         &:before {
           position: absolute;
           display: inline-block;
