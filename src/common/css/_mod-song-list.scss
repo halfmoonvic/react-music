@@ -1,0 +1,30 @@
+@import "./lib-variable";
+@import "./lib-mixin";
+
+.c-song-list {
+  .song-list__item {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: 64px;
+    font-size: 14px;
+    .item__content {
+      flex: 1;
+      line-height: 20px;
+      overflow: hidden;
+      .content__name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #fff;
+      }
+      .content__desc {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-top: 4px;
+        color: rgba(255,255,255,0.3);
+      }
+    }
+  }
+}

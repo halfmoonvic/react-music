@@ -9,6 +9,7 @@ import BScroll from 'better-scroll'
 
 class Scroll extends Component {
   static defaultProps = {
+    top: 0,
     probeType: 1,
     click: true,
     data: [],
@@ -22,6 +23,11 @@ class Scroll extends Component {
     setTimeout(() => {
       me.refresh()
     }, 3000)
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.top) {
+      this.setHeight()
+    }
   }
   shouldComponentUpdate(nextProps, nextState) {
     let me = this
@@ -51,6 +57,9 @@ class Scroll extends Component {
       })
     }
 
+  }
+  setHeight() {
+    this.refs.oScroll.style.top = this.props.top + 'px'
   }
   enable() {
     let me = this

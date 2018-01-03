@@ -8,6 +8,7 @@ import { getSingerDeatil } from 'api/singer'
 import { ERR_OK } from 'api/config'
 import { createSong } from 'common/js/song'
 /******* 本地 公用组件 *****/
+import MusicList from 'component/music-list/music-list'
 /**** 当前组件的 子组件等 ***/
 
 @connect(
@@ -17,7 +18,9 @@ class SingerDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      songs: []
+      songs: [],
+      title: '',
+      bgImage: ''
     }
 
     this._normalizeSongs = this._normalizeSongs.bind(this)
@@ -27,9 +30,15 @@ class SingerDetail extends Component {
   }
   _getDeatil() {
     const { singer } = this.props.states
-    if (!singer.id) return
+    if (!singer.id) {
+      this.props.history.goBack()
+      return
+    }
+    this.setState({
+      title: singer.name,
+      bgImage: singer.avatar
+    })
     getSingerDeatil(singer.id).then(res => {
-      console.log(this._normalizeSongs(res.data.list))
       if (res.code === ERR_OK) {
         this.setState({
           songs: this._normalizeSongs(res.data.list)
@@ -49,7 +58,9 @@ class SingerDetail extends Component {
   }
   render() {
     return (
-      <div className="c-singer-detailt">SingerDetail-页面</div>
+      <div className="c-singer-detailt">
+        <MusicList songs={this.state.songs} title={this.state.title} bgImage={this.state.bgImage}></MusicList>
+      </div>
     )
   }
 }

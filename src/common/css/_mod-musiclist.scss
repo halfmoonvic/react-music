@@ -1,0 +1,65 @@
+@import "./_lib-variable.scss";
+@import "./_lib-mixin.scss";
+
+.c-music-list {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #222;
+  .music-list__back {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    z-index: 50;
+    .back__icon {
+      display: block;
+      padding: 10px;
+      font-size: 22px;
+      color: #ffcd32;
+    }
+  }
+  .music-list__title {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    z-index: 40;
+    width: 80%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+    line-height: 40px;
+    font-size: 18px;
+    color: #fff;
+  }
+  .music-list__bg-image {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 70%;
+    transform-origin: top;
+    background-size: cover;
+    .filter {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7,17,27,0.4);
+      z-index: 101;
+    }
+  }
+  .o-list {
+    position: absolute;
+    bottom: 60px;
+    top: 0;
+    width: 100%;
+    background: #222;
+    .song-list-wrapper {
+      padding: 20px 30px;
+    }
+  }
+}
