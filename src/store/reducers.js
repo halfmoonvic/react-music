@@ -26,7 +26,7 @@ export function chengChuCounter(state = states.initChengChu, action) {
 }
 
 // 歌手详情页面，歌手选中
-export function selectSinger(state = states.initSinger, action) {
+export function singer(state = states.initSinger, action) {
   switch (action.type) {
     case types.SET_SINGER:
       return action.payload

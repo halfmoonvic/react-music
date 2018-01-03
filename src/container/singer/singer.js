@@ -19,7 +19,7 @@ const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
 @connect(
-  (state) => ({ state: state }), { setSinger }
+  (state) => ({ states: state }), { setSinger }
 )
 
 @withRouter
@@ -48,7 +48,6 @@ class Singer extends Component {
   selectSinger(singer) {
     this.setState({ singerDetailFlag: true })
     this.props.history.push(`/singer/${singer.id}`)
-    console.log(this.props)
     this.props.setSinger(singer)
   }
   _normalizeSinger(list) {
