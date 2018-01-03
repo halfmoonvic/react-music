@@ -17,3 +17,7 @@ export function setCheng(val = 3) {
 export function setChu(val = 3) {
   return { type: types.SET_CHU, payload: val }
 }
+
+export function setSinger(singer) {
+  return { type: types.SET_SINGER, payload: singer }
+}

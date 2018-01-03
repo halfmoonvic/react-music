@@ -3,6 +3,8 @@
 import React, { Component } from 'react'
 import { withRouter, Route } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
+import { connect } from 'react-redux'
+import { setSinger } from 'store/actions'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
 import { getSingerList } from 'api/singer'
@@ -15,6 +17,10 @@ import SingerDetail from 'container/singer-deatil/singer-detail'
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
+
+@connect(
+  (state) => ({ state: state }), { setSinger }
+)
 
 @withRouter
 class Singer extends Component {
@@ -42,6 +48,8 @@ class Singer extends Component {
   selectSinger(singer) {
     this.setState({ singerDetailFlag: true })
     this.props.history.push(`/singer/${singer.id}`)
+    console.log(this.props)
+    this.props.setSinger(singer)
   }
   _normalizeSinger(list) {
     let map = {

@@ -5,3 +5,5 @@ export const SET_REMOVE = 'SET_REMOVE'
 export const SET_CHENG = 'SET_CHENG'
 
 export const SET_CHU = 'SET_CHU'
+
+export const SET_SINGER = 'SET_SINGER'

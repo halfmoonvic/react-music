@@ -20,7 +20,7 @@ class App extends Component {
         <div className="app">
           <Header></Header>
           <Tab></Tab>
-          <TransitionGroup>
+          <TransitionGroup className="router-transition">
             <CSSTransition
               classNames="fade"
               timeout={{enter: 500, exit: 300}}
