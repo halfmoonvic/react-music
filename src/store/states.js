@@ -12,5 +12,6 @@ export const initPlayer = {
   playList: [],
   sequenceList: [],
   mode: playMode.sequence,
-  currentIndex: -1
+  currentIndex: -1,
+  currentSong: {}
 }

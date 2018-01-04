@@ -1,0 +1,25 @@
+@import "./lib-variable";
+@import "./lib-mixin";
+
+.o-player {
+  .normal-player {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 150;
+    background: #222;
+  }
+  .mini-player {
+    display: none;
+    align-items: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 180;
+    width: 100%;
+    height: 60px;
+    background: #333;
+  }
+}

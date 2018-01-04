@@ -9,6 +9,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 /******* 本地 公用组件 *****/
 import Header from 'container/header/header'
 import Tab from 'container/tab/tab'
+import Player from 'component/player/player'
 /**** 当前组件的 子组件等 ***/
 import Recommend from 'container/recommend/recommend'
 import Singer from 'container/singer/singer'
@@ -32,6 +33,7 @@ class App extends Component {
               </Switch>
             </CSSTransition>
           </TransitionGroup>
+          <Player></Player>
         </div>
       </Router>
     )

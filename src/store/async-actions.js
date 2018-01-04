@@ -31,3 +31,15 @@ export function getChu(val) {
     }, 1000)
   }
 }
+
+// 歌手列表选中某一首歌后选择播放
+export function selectPlay(list, index) {
+  return dispatch => {
+    dispatch(actions.setPlaylist(list))
+    dispatch(actions.setSequenceList(list))
+    dispatch(actions.setCurrentIndex(index))
+    dispatch(actions.setCurrentSong(index))
+    dispatch(actions.setFullScreen(true))
+    dispatch(actions.setPlayState(true))
+  }
+}

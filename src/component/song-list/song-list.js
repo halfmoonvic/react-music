@@ -18,11 +18,14 @@ class SongList extends Component {
   getDesc(song) {
     return `${song.singer}。${song.album}`
   }
+  selectItem(song, index) {
+    this.props.selectSong(song, index)
+  }
   render() {
     return (
       <div className={classNames('c-song-list', this.props.className)}>
-        <ul>{this.props.songs.map(v => (
-          <li className="song-list__item" key={v.id}>
+        <ul>{this.props.songs.map((v, i) => (
+          <li className="song-list__item" key={v.id} onClick={() => this.selectItem(v, i)}>
             <div className="item__content" key={v.id}>
               <h2 className="content__name">{v.name}</h2>
               <p className="content__desc">{this.getDesc(v)}</p>

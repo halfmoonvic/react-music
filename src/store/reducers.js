@@ -40,6 +40,7 @@ export function singer(state = states.initSinger, action) {
 // playList: [],
 // sequenceList: [],
 // mode: playMode.sequence,
+// currentSong: {},
 // currentIndex: -1
 export function player(state = states.initPlayer, action) {
   const { type, payload } = action
@@ -72,7 +73,7 @@ export function player(state = states.initPlayer, action) {
     case types.SET_CURRENT_INDEX:
       return {
         ...state,
-        mode: payload
+        currentIndex: payload
       }
     case types.SET_CURRENT_SONG:
       return {

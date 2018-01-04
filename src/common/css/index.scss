@@ -8,13 +8,14 @@
 
 @import "./_animate";         // 动画
 
-@import "./obj-slider.sass";       // 轮播图组件
+@import "./obj-slider.sass";   // 轮播图组件
 @import "./obj-listview";      // list-view 组件
+@import "./obj-player";        // 播放器
 
-@import "./mod-site-nav";     // 网站 tab 标签导航
-@import "./mod-recommend";    // 热门歌曲推荐
-@import "./mod-singer";       // 歌手列表页
+@import "./mod-site-nav";      // 网站 tab 标签导航
+@import "./mod-recommend";     // 热门歌曲推荐
+@import "./mod-singer";        // 歌手列表页
 @import "./mod-singer-detail";   // 歌手详情页，歌曲列表
 
-@import "./mod-musiclist";      // 歌手－歌曲列表组件
-@import "./mod-song-list";     // 歌曲列表组件
+@import "./mod-musiclist";       // 歌手－歌曲列表组件
+@import "./mod-song-list";       // 歌曲列表组件
