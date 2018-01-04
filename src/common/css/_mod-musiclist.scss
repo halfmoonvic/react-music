@@ -54,12 +54,18 @@
   }
   .o-list {
     position: absolute;
-    bottom: 60px;
     top: 0;
+    bottom: 0;
+    // overflow: hidden;
     width: 100%;
     background: #222;
     .song-list-wrapper {
       padding: 20px 30px;
     }
+  }
+  .bg-layer {
+    position: relative;
+    height: 100%;
+    background: #222;
   }
 }

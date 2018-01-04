@@ -10,6 +10,8 @@ import Scroll from 'component/scroll/scroll'
 import SongList from 'component/song-list/song-list'
 /**** 当前组件的 子组件等 ***/
 
+const RESERVED_HEIGHT = 40
+
 @withRouter
 class MusicList extends Component {
   static defaultProps = {
@@ -27,17 +29,70 @@ class MusicList extends Component {
     this.handleBack = this.handleBack.bind(this)
 
     this.state = {
-      toBgImage: 0
+      toBgImage: 0,
+      scrollY: 0
     }
+
+    // 其它一些本地不要监听的变量
+    this.probeType = 3
+    this.listenScroll = true
+
+    this.scroll = this.scroll.bind(this)
   }
   componentDidMount() {
+    this.setToBgImage()
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.scrollY !== nextState.scrollY) {
+      this._w_scrollY(nextProps, nextState)
+    }
+
+    return true
+  }
+  scroll(pos) {
     this.setState({
-      toBgImage: this.refs.bgImage.clientHeight
+      scrollY: pos.y
     })
-    console.log(this.refs.bgImage.clientHeight)
   }
   handleBack() {
     this.props.history.goBack()
+  }
+  setToBgImage() {
+    this.imageHeight = this.refs.bgImage.clientHeight
+    this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT
+    this.setState({
+      toBgImage: this.imageHeight
+    })
+  }
+  _w_scrollY(nextProps, nextState) {
+    const newY = nextState.scrollY
+
+    let zIndex = 0
+    let scale = 1
+    let blur = 0
+    let translateY = Math.max(newY, this.minTranslateY)
+
+    this.refs.layer.style['transform'] = `translate3d(0, ${translateY}px, 0)`
+
+    const percent = Math.abs(newY / this.imageHeight)
+    if (newY > 0) {
+      scale = 1 + percent
+      zIndex = 10
+    } else {
+      blur = Math.min(20 * percent, 20)
+    }
+
+    if (newY < this.minTranslateY) {
+      zIndex = 10
+      this.refs.bgImage.style.paddingTop = 0
+      this.refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
+    } else {
+      this.refs.bgImage.style.paddingTop = '70%'
+      this.refs.bgImage.style.height = 0
+    }
+    this.refs.bgImage.style.zIndex = zIndex
+    this.refs.bgImage.style['transform'] = `scale(${scale})`
+    this.refs.filter.style['backdrop-filter'] = `blur(${blur}px)`
   }
   render() {
     return (
@@ -47,9 +102,17 @@ class MusicList extends Component {
         </div>
         <div className="music-list__title">{this.props.title}</div>
         <div className="music-list__bg-image" style={{'backgroundImage': `url(${this.props.bgImage})`}} ref="bgImage">
-          <div className="filter"></div>
+          <div className="filter" ref="filter"></div>
         </div>
-        <Scroll data={this.props.songs} className="o-list" ref="list" top={this.state.toBgImage}>
+        <div className="bg-layer" ref="layer"></div>
+        <Scroll
+          data={this.props.songs}
+          className="o-list"
+          ref="list"
+          top={this.state.toBgImage}
+          probeType={this.probeType}
+          listenScroll={this.listenScroll}
+          scroll={this.scroll}>
           <SongList songs={this.props.songs} className="song-list-wrapper"></SongList>
         </Scroll>
       </div>
