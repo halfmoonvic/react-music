@@ -5,12 +5,14 @@ import propTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
+import { prefixStyle } from 'common/js/dom'
 /******* 本地 公用组件 *****/
 import Scroll from 'component/scroll/scroll'
 import SongList from 'component/song-list/song-list'
 /**** 当前组件的 子组件等 ***/
 
 const RESERVED_HEIGHT = 40
+const transform = prefixStyle('transform')
 
 @withRouter
 class MusicList extends Component {
@@ -72,7 +74,7 @@ class MusicList extends Component {
     let blur = 0
     let translateY = Math.max(newY, this.minTranslateY)
 
-    this.refs.layer.style['transform'] = `translate3d(0, ${translateY}px, 0)`
+    this.refs.layer.style[transform] = `translate3d(0, ${translateY}px, 0)`
 
     const percent = Math.abs(newY / this.imageHeight)
     if (newY > 0) {
@@ -82,16 +84,19 @@ class MusicList extends Component {
       blur = Math.min(20 * percent, 20)
     }
 
+    // 顶到顶部去了
     if (newY < this.minTranslateY) {
       zIndex = 10
       this.refs.bgImage.style.paddingTop = 0
       this.refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
+      this.refs.playBtn.style.display = 'none'
     } else {
       this.refs.bgImage.style.paddingTop = '70%'
       this.refs.bgImage.style.height = 0
+      this.refs.playBtn.style.display = ''
     }
     this.refs.bgImage.style.zIndex = zIndex
-    this.refs.bgImage.style['transform'] = `scale(${scale})`
+    this.refs.bgImage.style[transform] = `scale(${scale})`
     this.refs.filter.style['backdrop-filter'] = `blur(${blur}px)`
   }
   render() {
@@ -102,6 +107,12 @@ class MusicList extends Component {
         </div>
         <div className="music-list__title">{this.props.title}</div>
         <div className="music-list__bg-image" style={{'backgroundImage': `url(${this.props.bgImage})`}} ref="bgImage">
+          {this.props.songs.length ? <div className="o-play-wrapper" ref="playBtn">
+            <div className="play">
+              <div className="icon-play"></div>
+              <span className="text">随机播放全部</span>
+            </div>
+          </div> : null}
           <div className="filter" ref="filter"></div>
         </div>
         <div className="bg-layer" ref="layer"></div>
