@@ -34,3 +34,52 @@ export function singer(state = states.initSinger, action) {
       return state
   }
 }
+
+// playing: false,
+// fullScreen: false,
+// playList: [],
+// sequenceList: [],
+// mode: playMode.sequence,
+// currentIndex: -1
+export function player(state = states.initPlayer, action) {
+  const { type, payload } = action
+  switch (type) {
+    case types.SET_PLAYING_STATE:
+      return {
+        ...state,
+        playing: payload
+      }
+    case types.SET_FULL_SCREEN:
+      return {
+        ...state,
+        fullScreen: payload
+      }
+    case types.SET_PLAYLIST:
+      return {
+        ...state,
+        playList: payload
+      }
+    case types.SET_SEQUENCE_LIST:
+      return {
+        ...state,
+        sequenceList: payload
+      }
+    case types.SET_PLAY_MODE:
+      return {
+        ...state,
+        mode: payload
+      }
+    case types.SET_CURRENT_INDEX:
+      return {
+        ...state,
+        mode: payload
+      }
+    case types.SET_CURRENT_SONG:
+      return {
+        ...state,
+        currentSong: state.playList.find((v, i) => i === state.currentIndex)
+      }
+    default:
+      return state
+  }
+}
