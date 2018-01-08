@@ -31,3 +31,35 @@
     opacity: 1;
     transition: opacity .5s ease-in;
 }
+
+// 播放器动画
+.player-transition-enter {
+    opacity: 0;
+    // transform: translateX(100%);
+}
+
+.player-transition-enter.player-transition-enter-active {
+    opacity: 1;
+    // transform: translateX(0);
+    transition: all 200ms ease-in;
+}
+
+.player-transition-exit {
+    opacity: 1;
+    // transform: translateX(0);
+}
+
+.player-transition-exit, .player-transition-exit-active {
+    opacity: 0;
+    // transform: translateX(-100%);
+    transition: all 200ms ease-out;
+}
+
+
+.player-transition-appear {
+    opacity: 0.01;
+}
+.player-transition-appear.player-transition-appear-active {
+    opacity: 1;
+    transition: opacity .5s ease-in;
+}

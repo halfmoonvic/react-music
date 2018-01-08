@@ -18,10 +18,7 @@ import SingerDetail from 'container/singer-deatil/singer-detail'
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
-@connect(
-  (state) => ({ states: state }), { setSinger }
-)
-
+@connect(state => ({ states: state }), { setSinger })
 @withRouter
 class Singer extends Component {
   constructor(props) {
@@ -46,7 +43,6 @@ class Singer extends Component {
     })
   }
   selectSinger(singer) {
-    this.setState({ singerDetailFlag: true })
     this.props.history.push(`/singer/${singer.id}`)
     this.props.setSinger(singer)
   }
@@ -60,10 +56,12 @@ class Singer extends Component {
     list.forEach((item, index) => {
       // 热门数据
       if (index < HOT_SINGER_LEN) {
-        map.hot.items.push(new Singers({
-          id: item.Fsinger_mid,
-          name: item.Fsinger_name
-        }))
+        map.hot.items.push(
+          new Singers({
+            id: item.Fsinger_mid,
+            name: item.Fsinger_name
+          })
+        )
       }
       // 普通数据
       const key = item.Findex
@@ -73,10 +71,12 @@ class Singer extends Component {
           items: []
         }
       }
-      map[key].items.push(new Singers({
-        id: item.Fsinger_mid,
-        name: item.Fsinger_name
-      }))
+      map[key].items.push(
+        new Singers({
+          id: item.Fsinger_mid,
+          name: item.Fsinger_name
+        })
+      )
     })
 
     // 处理下map
@@ -99,15 +99,21 @@ class Singer extends Component {
   render() {
     return (
       <div className="c-singer">
-        <ListView data={this.state.singers} select={this.selectSinger}></ListView>
+        <ListView data={this.state.singers} select={this.selectSinger} />
         {/*<Route path={`${this.props.match.url}/:id`} component={SingerDetail}></Route>*/}
         <CSSTransition
-          key={2}
-          in={this.state.singerDetailFlag}
+          in={this.props.history.action === 'PUSH' ? true : false}
           timeout={1000}
-          classNames="fade"
-        >
-          <Route path={`${this.props.match.url}/:id`} component={SingerDetail}></Route>
+          classNames="fade">
+          {this.props.history.action === 'PUSH' ? (
+            <Route
+              path={`${this.props.match.url}/:id`}
+              component={SingerDetail}
+              ref="flag"
+            />
+          ) : (
+            <div>react-transition-group</div>
+          )}
         </CSSTransition>
       </div>
     )
