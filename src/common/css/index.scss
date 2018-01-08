@@ -1,3 +1,5 @@
+@import "./frame";
+
 // lib 公共样式等
 @import "./lib-reset.sass";   // 重置浏览器样式  reset.scss 为pc端重置样式库
 @import "./lib-base";         // 针对 UI 设计稿而做的一些样式重置

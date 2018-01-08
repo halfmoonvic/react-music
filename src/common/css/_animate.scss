@@ -1,6 +1,15 @@
 @import './lib-variable';
 @import './lib-mixin';
 
+.router-transition {
+  width: 100%;
+  height: 100%;
+  > div {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .fade-enter {
     opacity: 0;
     transform: translateX(100%);
@@ -9,7 +18,7 @@
 .fade-enter.fade-enter-active {
     opacity: 1;
     transform: translateX(0);
-    transition: all 200ms ease-in;
+    transition: all 5000ms ease-in;
 }
 
 .fade-exit {
@@ -20,7 +29,7 @@
 .fade-exit, .fade-exit-active {
     opacity: 0;
     transform: translateX(-100%);
-    transition: all 200ms ease-out;
+    transition: all 5000ms ease-out;
 }
 
 
@@ -41,7 +50,7 @@
 .player-transition-enter.player-transition-enter-active {
     opacity: 1;
     // transform: translateX(0);
-    transition: all 200ms ease-in;
+    transition: all 5000ms ease-in;
 }
 
 .player-transition-exit {
@@ -52,7 +61,7 @@
 .player-transition-exit, .player-transition-exit-active {
     opacity: 0;
     // transform: translateX(-100%);
-    transition: all 200ms ease-out;
+    transition: all 5000ms ease-out;
 }
 
 

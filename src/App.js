@@ -41,3 +41,32 @@ class App extends Component {
 }
 
 export default App
+
+
+{/*<BrowserRouter>
+  <Route
+    render={props => {
+      console.log(props)
+      const { location } = props
+      return (
+        <div className="app">
+          <Header />
+          <Tab />
+          <TransitionGroup className="router-transition">
+            <CSSTransition
+              classNames="fade"
+              key={location.key}
+              timeout={{ enter: 5000, exit: 5000 }}>
+              <Switch>
+                <Redirect path="/" exact to="/recommend" />
+                <Route path="/recommend" component={Recommend} />
+                <Route path="/singer" component={Singer} />
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+          <Player />
+        </div>
+      )
+    }}
+  />
+</BrowserRouter>*/}
