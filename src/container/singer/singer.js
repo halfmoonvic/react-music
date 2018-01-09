@@ -101,7 +101,7 @@ class Singer extends Component {
       <div className="c-singer">
         <ListView data={this.state.singers} select={this.selectSinger} />
         {/*<Route path={`${this.props.match.url}/:id`} component={SingerDetail}></Route>*/}
-        <CSSTransition
+        {/*<CSSTransition
           in={this.props.history.action === 'PUSH' ? true : false}
           timeout={1000}
           classNames="fade">
@@ -114,6 +114,16 @@ class Singer extends Component {
           ) : (
             <div>react-transition-group</div>
           )}
+        </CSSTransition>*/}
+        <CSSTransition
+          key={2}
+          in={this.state.singerDetailFlag}
+          timeout={1000}
+          classNames="fade">
+          <Route
+            path={`${this.props.match.url}/:id`}
+            component={SingerDetail}
+          />
         </CSSTransition>
       </div>
     )

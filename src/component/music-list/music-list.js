@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import propTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { selectPlay } from 'store/async-actions'
+import { getSelectSong } from 'store/async-actions'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
 import { prefixStyle } from 'common/js/dom'
@@ -18,7 +18,7 @@ const transform = prefixStyle('transform')
 
 @withRouter
 @connect(
-  state => ({ player: state.player }), { selectPlay }
+  state => ({ player: state.player }), { getSelectSong }
 )
 class MusicList extends Component {
   static defaultProps = {
@@ -66,8 +66,7 @@ class MusicList extends Component {
     this.props.history.goBack()
   }
   selectSong(song, index) {
-    console.log(index)
-    this.props.selectPlay(this.props.songs, index)
+    this.props.getSelectSong(this.props.songs, index)
   }
   setToBgImage() {
     this.imageHeight = this.refs.bgImage.clientHeight

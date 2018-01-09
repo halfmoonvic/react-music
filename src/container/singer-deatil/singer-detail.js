@@ -31,9 +31,11 @@ class SingerDetail extends Component {
   _getDeatil() {
     const { singer } = this.props.states
     if (!singer.id) {
+      console.log(singer)
       this.props.history.goBack()
       return
     }
+
     this.setState({
       title: singer.name,
       bgImage: singer.avatar

@@ -33,7 +33,7 @@ export function getChu(val) {
 }
 
 // 歌手列表选中某一首歌后选择播放
-export function selectPlay(list, index) {
+export function getSelectSong(list, index) {
   return dispatch => {
     dispatch(actions.setPlaylist(list))
     dispatch(actions.setSequenceList(list))

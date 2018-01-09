@@ -50,7 +50,7 @@
 .player-transition-enter.player-transition-enter-active {
     opacity: 1;
     // transform: translateX(0);
-    transition: all 5000ms ease-in;
+    transition: all 200ms ease-in;
 }
 
 .player-transition-exit {
@@ -61,7 +61,7 @@
 .player-transition-exit, .player-transition-exit-active {
     opacity: 0;
     // transform: translateX(-100%);
-    transition: all 5000ms ease-out;
+    transition: all 200ms ease-out;
 }
 
 
