@@ -1,9 +1,10 @@
 /**** React应用依赖组件 ****/
 // core
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { setFullScreen } from 'store/actions'
 import { CSSTransition } from 'react-transition-group'
+import classNames from 'classnames'
+import { connect } from 'react-redux'
+import { setFullScreen, setPlayState } from 'store/actions'
 /******* 第三方 组件库 *****/
 import animations from 'create-keyframe-animation'
 /**** 本地公用变量 公用函数 **/
@@ -13,7 +14,7 @@ import { prefixStyle } from 'common/js/dom'
 
 const transform = prefixStyle('transform')
 
-@connect(state => ({ player: state.player }), { setFullScreen })
+@connect(state => ({ player: state.player }), { setFullScreen, setPlayState })
 class Player extends Component {
   constructor(props) {
     super(props)
@@ -21,12 +22,26 @@ class Player extends Component {
     this.open = this.open.bind(this)
     this._getPosAndScale = this._getPosAndScale.bind(this)
     this.entered = this.entered.bind(this)
+    this.togglePlaying = this.togglePlaying.bind(this)
+  }
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
+    if (nextProps.player.currentSong !== this.props.player.currentSong) {
+      this._w_currentSong(nextProps)
+    }
+    if (nextProps.player.playing !== this.props.player.playing) {
+      this._w_playing(nextProps)
+    }
   }
   back() {
     this.props.setFullScreen(false)
   }
   open() {
     this.props.setFullScreen(true)
+  }
+  togglePlaying(e) {
+    e.stopPropagation()
+    this.props.setPlayState(!this.props.player.playing)
   }
   _getPosAndScale() {
     const targetWidth = 40
@@ -42,6 +57,18 @@ class Player extends Component {
       y,
       scale
     }
+  }
+  _w_currentSong(nextProps) {
+    setTimeout(() => {
+      this.refs.audio.play()
+    }, 20)
+  }
+  _w_playing(nextProps) {
+    const newPlaying = nextProps.player.playing
+    const audio = this.refs.audio
+    setTimeout(() => {
+      newPlaying ? audio.play() : audio.pause()
+    }, 20)
   }
   enter(el) {
     el.style.display = 'block'
@@ -64,7 +91,7 @@ class Player extends Component {
       name: 'move',
       animation,
       presets: {
-        duration: 4000,
+        duration: 400,
         easing: 'linear'
       }
     })
@@ -91,7 +118,7 @@ class Player extends Component {
       <div className="o-player">
         <CSSTransition
           in={player.fullScreen}
-          timeout={4000}
+          timeout={400}
           classNames="player-transition"
           onEnter={el => this.enter(el)}
           onEntered={el => this.entered(el)}
@@ -112,7 +139,7 @@ class Player extends Component {
               <div className="middle-l">
                 <div className="cd-wrapper" ref="cdWrapper">
                   <div className="cd">
-                    <img src={currentSong.image} alt="" className="image" />
+                    <img src={currentSong.image} alt="" className={classNames('image', player.playing ? 'play' : 'play pause')} />
                   </div>
                 </div>
               </div>
@@ -126,7 +153,7 @@ class Player extends Component {
                   <i className="icon-prev" />
                 </div>
                 <div className="icon i-center">
-                  <i className="icon-play" />
+                  <i className={player.playing ? 'icon-pause' : 'icon-play'} onClick={this.togglePlaying} />
                 </div>
                 <div className="icon i-right">
                   <i className="icon-next" />
@@ -142,12 +169,21 @@ class Player extends Component {
           <div className="mini-player" onClick={this.open}>
             <div className="icon">
               <div className="imgWrapper">
-                <img src={currentSong.image} alt="" width="40" height="40" />
+                <img
+                  alt="avatar"
+                  src={currentSong.image}
+                  className={classNames(player.playing ? 'play' : 'play pause')}
+                  width="40"
+                  height="40"
+                />
               </div>
             </div>
             <div className="text">
               <h2 className="name">{currentSong.name}</h2>
               <p className="desc">{currentSong.singer}</p>
+            </div>
+            <div className="control">
+              <i className={player.playing ? 'icon-pause-mini' : 'icon-play-mini'} onClick={this.togglePlaying} />
             </div>
             <div className="control" />
             <div className="control">
@@ -155,6 +191,7 @@ class Player extends Component {
             </div>
           </div>
         ) : null}
+        <audio src={currentSong.url} ref="audio" />
       </div>
     )
   }
