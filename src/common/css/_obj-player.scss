@@ -118,6 +118,9 @@
         .icon {
           flex: 1;
           color: $color-theme;
+          &.disable {
+            color: $color-theme-d;
+          }
         }
         .i-left {
           text-align: right;

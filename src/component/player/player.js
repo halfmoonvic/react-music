@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import { setFullScreen, setPlayState } from 'store/actions'
+import { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong } from 'store/actions'
 /******* 第三方 组件库 *****/
 import animations from 'create-keyframe-animation'
 /**** 本地公用变量 公用函数 **/
@@ -14,61 +14,32 @@ import { prefixStyle } from 'common/js/dom'
 
 const transform = prefixStyle('transform')
 
-@connect(state => ({ player: state.player }), { setFullScreen, setPlayState })
+@connect(state => ({ player: state.player }), { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong })
 class Player extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      songReady: false
+    }
+
     this.back = this.back.bind(this)
     this.open = this.open.bind(this)
     this._getPosAndScale = this._getPosAndScale.bind(this)
     this.entered = this.entered.bind(this)
     this.togglePlaying = this.togglePlaying.bind(this)
+    this.next = this.next.bind(this)
+    this.prev = this.prev.bind(this)
+    this.ready = this.ready.bind(this)
+    this.error = this.error.bind(this)
   }
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
     if (nextProps.player.currentSong !== this.props.player.currentSong) {
       this._w_currentSong(nextProps)
     }
     if (nextProps.player.playing !== this.props.player.playing) {
       this._w_playing(nextProps)
     }
-  }
-  back() {
-    this.props.setFullScreen(false)
-  }
-  open() {
-    this.props.setFullScreen(true)
-  }
-  togglePlaying(e) {
-    e.stopPropagation()
-    this.props.setPlayState(!this.props.player.playing)
-  }
-  _getPosAndScale() {
-    const targetWidth = 40
-    const paddingLeft = 40
-    const paddingBottom = 30
-    const paddingTop = 80
-    const width = window.innerWidth * 0.8
-    const scale = targetWidth / width
-    const x = -(window.innerWidth / 2) - paddingLeft
-    const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
-    return {
-      x,
-      y,
-      scale
-    }
-  }
-  _w_currentSong(nextProps) {
-    setTimeout(() => {
-      this.refs.audio.play()
-    }, 20)
-  }
-  _w_playing(nextProps) {
-    const newPlaying = nextProps.player.playing
-    const audio = this.refs.audio
-    setTimeout(() => {
-      newPlaying ? audio.play() : audio.pause()
-    }, 20)
   }
   enter(el) {
     el.style.display = 'block'
@@ -111,6 +82,83 @@ class Player extends Component {
     this.refs.cdWrapper.style.transition = ''
     this.refs.cdWrapper.style[transform] = ''
   }
+  back() {
+    this.props.setFullScreen(false)
+  }
+  open() {
+    this.props.setFullScreen(true)
+  }
+  next() {
+    if (!this.state.songReady) {
+      return
+    }
+    let index = this.props.player.currentIndex + 1
+    if (index === this.props.player.playList.length) {
+      index = 0
+    }
+    this.props.setCurrentIndex(index)
+    this.props.setCurrentSong(index)
+
+    if (!this.props.player.playing) {
+      this.togglePlaying()
+    }
+    this.setState({songReady: false})
+  }
+  prev() {
+    if (!this.state.songReady) {
+      return
+    }
+    let index = this.props.player.currentIndex - 1
+    if (index === -1) {
+      index = this.props.player.playList.length - 1
+    }
+    this.props.setCurrentIndex(index)
+    this.props.setCurrentSong(index)
+
+    if (!this.props.player.playing) {
+      this.togglePlaying()
+    }
+    this.setState({songReady: false})
+  }
+  togglePlaying(e) {
+    if (e) {
+      e.stopPropagation()
+    }
+    this.props.setPlayState(!this.props.player.playing)
+  }
+  ready() {
+    this.setState({songReady: true})
+  }
+  error() {
+    this.setState({songReady: true})
+  }
+  _getPosAndScale() {
+    const targetWidth = 40
+    const paddingLeft = 40
+    const paddingBottom = 30
+    const paddingTop = 80
+    const width = window.innerWidth * 0.8
+    const scale = targetWidth / width
+    const x = -(window.innerWidth / 2) - paddingLeft
+    const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
+    return {
+      x,
+      y,
+      scale
+    }
+  }
+  _w_currentSong(nextProps) {
+    setTimeout(() => {
+      this.refs.audio.play()
+    }, 20)
+  }
+  _w_playing(nextProps) {
+    const newPlaying = nextProps.player.playing
+    const audio = this.refs.audio
+    setTimeout(() => {
+      newPlaying ? audio.play() : audio.pause()
+    }, 20)
+  }
   render() {
     const { player } = this.props
     const { currentSong } = player
@@ -146,19 +194,19 @@ class Player extends Component {
             </div>
             <div className="bottom">
               <div className="operators">
-                <div className="icon i-left">
+                <div className={classNames(`icon i-left`, this.state.songReady ? '' : 'disable')}>
                   <i className="icon-sequence" />
                 </div>
-                <div className="icon i-left">
-                  <i className="icon-prev" />
+                <div className={classNames(`icon i-left`, this.state.songReady ? '' : 'disable')}>
+                  <i className="icon-prev" onClick={this.prev} />
                 </div>
-                <div className="icon i-center">
+                <div className={classNames(`icon i-center`, this.state.songReady ? '' : 'disable')}>
                   <i className={player.playing ? 'icon-pause' : 'icon-play'} onClick={this.togglePlaying} />
                 </div>
-                <div className="icon i-right">
-                  <i className="icon-next" />
+                <div className={classNames(`icon i-right`, this.state.songReady ? '' : 'disable')}>
+                  <i className="icon-next" onClick={this.next} />
                 </div>
-                <div className="icon i-right">
+                <div className={classNames(`icon i-right`, this.state.songReady ? '' : 'disable')}>
                   <i className="icon icon-not-favorite" />
                 </div>
               </div>
@@ -191,7 +239,7 @@ class Player extends Component {
             </div>
           </div>
         ) : null}
-        <audio src={currentSong.url} ref="audio" />
+        <audio src={currentSong.url} ref="audio" onCanPlay={this.ready} onError={this.error} />
       </div>
     )
   }
