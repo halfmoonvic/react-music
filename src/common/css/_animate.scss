@@ -66,9 +66,9 @@
 
 
 .player-transition-appear {
-    opacity: 0.01;
+    opacity: 0;
 }
 .player-transition-appear.player-transition-appear-active {
     opacity: 1;
-    transition: opacity .5s ease-in;
+    transition: all 200ms ease-in;
 }

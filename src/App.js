@@ -43,7 +43,7 @@ class App extends Component {
 export default App
 
 
-{/*<BrowserRouter>
+/*<BrowserRouter>
   <Route
     render={props => {
       console.log(props)
@@ -69,4 +69,4 @@ export default App
       )
     }}
   />
-</BrowserRouter>*/}
+</BrowserRouter>*/
