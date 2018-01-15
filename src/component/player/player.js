@@ -11,6 +11,7 @@ import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
 /******* 本地 公用组件 *****/
 /**** 当前组件的 子组件等 ***/
+import ProgressBar from 'component/progress-bar/progress-bar'
 
 const transform = prefixStyle('transform')
 
@@ -35,6 +36,7 @@ class Player extends Component {
     this.error = this.error.bind(this)
     this.updateTime = this.updateTime.bind(this)
     this.format = this.format.bind(this)
+    this.onProgressBarChange = this.onProgressBarChange.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.player.currentSong !== this.props.player.currentSong) {
@@ -123,6 +125,12 @@ class Player extends Component {
     }
     this.setState({ songReady: false })
   }
+  onProgressBarChange(percent) {
+    this.refs.audio.currentTime = this.props.player.currentSong.duration * percent
+    if (!this.props.player.playing) {
+      this.togglePlaying()
+    }
+  }
   togglePlaying(e) {
     if (e) {
       e.stopPropagation()
@@ -140,12 +148,12 @@ class Player extends Component {
   }
   format(interval) {
     interval = interval | 0
-    const minute = interval / 60 | 0
+    const minute = (interval / 60) | 0
     const second = this._pad(interval % 60)
     return `${minute}:${second}`
   }
   _pad(num, n = 2) {
-    let len = num.toString.length
+    let len = num.toString().length
     while (len < n) {
       num = '0' + num
       len++
@@ -219,7 +227,9 @@ class Player extends Component {
             <div className="bottom">
               <div className="progress-wrapper">
                 <span className="time tile-l">{this.format(this.state.currentTime)}</span>
-                <div className="progress-bar-wrapper" />
+                <div className="progress-bar-wrapper">
+                  <ProgressBar percent={this.state.currentTime / currentSong.duration} percentChange={this.onProgressBarChange} />
+                </div>
                 <span className="time time-r">{this.format(currentSong.duration)}</span>
               </div>
               <div className="operators">
