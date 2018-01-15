@@ -20,7 +20,8 @@ class Player extends Component {
     super(props)
 
     this.state = {
-      songReady: false
+      songReady: false,
+      currentTime: 0
     }
 
     this.back = this.back.bind(this)
@@ -32,6 +33,8 @@ class Player extends Component {
     this.prev = this.prev.bind(this)
     this.ready = this.ready.bind(this)
     this.error = this.error.bind(this)
+    this.updateTime = this.updateTime.bind(this)
+    this.format = this.format.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.player.currentSong !== this.props.player.currentSong) {
@@ -102,7 +105,7 @@ class Player extends Component {
     if (!this.props.player.playing) {
       this.togglePlaying()
     }
-    this.setState({songReady: false})
+    this.setState({ songReady: false })
   }
   prev() {
     if (!this.state.songReady) {
@@ -118,7 +121,7 @@ class Player extends Component {
     if (!this.props.player.playing) {
       this.togglePlaying()
     }
-    this.setState({songReady: false})
+    this.setState({ songReady: false })
   }
   togglePlaying(e) {
     if (e) {
@@ -127,10 +130,27 @@ class Player extends Component {
     this.props.setPlayState(!this.props.player.playing)
   }
   ready() {
-    this.setState({songReady: true})
+    this.setState({ songReady: true })
   }
   error() {
-    this.setState({songReady: true})
+    this.setState({ songReady: true })
+  }
+  updateTime(e) {
+    this.setState({ currentTime: e.target.currentTime })
+  }
+  format(interval) {
+    interval = interval | 0
+    const minute = interval / 60 | 0
+    const second = this._pad(interval % 60)
+    return `${minute}:${second}`
+  }
+  _pad(num, n = 2) {
+    let len = num.toString.length
+    while (len < n) {
+      num = '0' + num
+      len++
+    }
+    return num
   }
   _getPosAndScale() {
     const targetWidth = 40
@@ -187,12 +207,21 @@ class Player extends Component {
               <div className="middle-l">
                 <div className="cd-wrapper" ref="cdWrapper">
                   <div className="cd">
-                    <img src={currentSong.image} alt="" className={classNames('image', player.playing ? 'play' : 'play pause')} />
+                    <img
+                      src={currentSong.image}
+                      alt=""
+                      className={classNames('image', player.playing ? 'play' : 'play pause')}
+                    />
                   </div>
                 </div>
               </div>
             </div>
             <div className="bottom">
+              <div className="progress-wrapper">
+                <span className="time tile-l">{this.format(this.state.currentTime)}</span>
+                <div className="progress-bar-wrapper" />
+                <span className="time time-r">{this.format(currentSong.duration)}</span>
+              </div>
               <div className="operators">
                 <div className={classNames(`icon i-left`, this.state.songReady ? '' : 'disable')}>
                   <i className="icon-sequence" />
@@ -239,7 +268,13 @@ class Player extends Component {
             </div>
           </div>
         ) : null}
-        <audio src={currentSong.url} ref="audio" onCanPlay={this.ready} onError={this.error} />
+        <audio
+          src={currentSong.url}
+          ref="audio"
+          onCanPlay={this.ready}
+          onError={this.error}
+          onTimeUpdate={this.updateTime}
+        />
       </div>
     )
   }
