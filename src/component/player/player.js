@@ -12,6 +12,7 @@ import { prefixStyle } from 'common/js/dom'
 /******* 本地 公用组件 *****/
 /**** 当前组件的 子组件等 ***/
 import ProgressBar from 'component/progress-bar/progress-bar'
+import ProgressCircle from 'component/progress-circle/progress-circle'
 
 const transform = prefixStyle('transform')
 
@@ -228,7 +229,10 @@ class Player extends Component {
               <div className="progress-wrapper">
                 <span className="time tile-l">{this.format(this.state.currentTime)}</span>
                 <div className="progress-bar-wrapper">
-                  <ProgressBar percent={this.state.currentTime / currentSong.duration} percentChange={this.onProgressBarChange} />
+                  <ProgressBar
+                    percent={this.state.currentTime / currentSong.duration}
+                    percentChange={this.onProgressBarChange}
+                  />
                 </div>
                 <span className="time time-r">{this.format(currentSong.duration)}</span>
               </div>
@@ -270,7 +274,12 @@ class Player extends Component {
               <p className="desc">{currentSong.singer}</p>
             </div>
             <div className="control">
-              <i className={player.playing ? 'icon-pause-mini' : 'icon-play-mini'} onClick={this.togglePlaying} />
+              <ProgressCircle radius={32} percent={this.state.currentTime / currentSong.duration}>
+                <i
+                  className={classNames('icon-mini', player.playing ? 'icon-pause-mini' : 'icon-play-mini')}
+                  onClick={this.togglePlaying}
+                />
+              </ProgressCircle>
             </div>
             <div className="control" />
             <div className="control">
