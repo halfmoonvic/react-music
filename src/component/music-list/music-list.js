@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import propTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { getSelectSong } from 'store/async-actions'
+import { getSelectSong, getRandomPlay } from 'store/async-actions'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
 import { prefixStyle } from 'common/js/dom'
@@ -18,7 +18,7 @@ const transform = prefixStyle('transform')
 
 @withRouter
 @connect(
-  state => ({ player: state.player }), { getSelectSong }
+  state => ({ player: state.player }), { getSelectSong, getRandomPlay }
 )
 class MusicList extends Component {
   static defaultProps = {
@@ -34,6 +34,7 @@ class MusicList extends Component {
   constructor(props) {
     super(props)
     this.handleBack = this.handleBack.bind(this)
+    this.random = this.random.bind(this)
 
     this.state = {
       toBgImage: 0,
@@ -74,6 +75,9 @@ class MusicList extends Component {
     this.setState({
       toBgImage: this.imageHeight
     })
+  }
+  random() {
+    this.props.getRandomPlay(this.props.songs)
   }
   _w_scrollY(nextProps, nextState) {
     const newY = nextState.scrollY
@@ -117,7 +121,7 @@ class MusicList extends Component {
         <div className="music-list__title">{this.props.title}</div>
         <div className="music-list__bg-image" style={{'backgroundImage': `url(${this.props.bgImage})`}} ref="bgImage">
           {this.props.songs.length ? <div className="o-play-wrapper" ref="playBtn">
-            <div className="play">
+            <div className="play" onClick={this.random}>
               <div className="icon-play"></div>
               <span className="text">随机播放全部</span>
             </div>

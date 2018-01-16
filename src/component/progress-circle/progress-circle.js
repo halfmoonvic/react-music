@@ -33,8 +33,8 @@ class ProgressCircle extends Component {
             cx="50"
             cy="50"
             fill="transparent"
-            stroke-dasharray={this.state.dashArray}
-            stroke-dashoffset={(1 - this.props.percent) * this.state.dashArray}
+            strokeDasharray={this.state.dashArray}
+            strokeDashoffset={(1 - this.props.percent) * this.state.dashArray}
           />
         </svg>
         {this.props.children}

@@ -4,11 +4,13 @@ import React, { Component } from 'react'
 import { CSSTransition } from 'react-transition-group'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
-import { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong } from 'store/actions'
+import { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong, setPlayMode, setPlaylist } from 'store/actions'
 /******* 第三方 组件库 *****/
 import animations from 'create-keyframe-animation'
 /**** 本地公用变量 公用函数 **/
 import { prefixStyle } from 'common/js/dom'
+import { shuffle } from 'common/js/util'
+import { playMode } from 'common/js/config'
 /******* 本地 公用组件 *****/
 /**** 当前组件的 子组件等 ***/
 import ProgressBar from 'component/progress-bar/progress-bar'
@@ -16,14 +18,15 @@ import ProgressCircle from 'component/progress-circle/progress-circle'
 
 const transform = prefixStyle('transform')
 
-@connect(state => ({ player: state.player }), { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong })
+@connect(state => ({ player: state.player }), { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong, setPlayMode, setPlaylist })
 class Player extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       songReady: false,
-      currentTime: 0
+      currentTime: 0,
+      iconMode: 'icon-sequence'
     }
 
     this.back = this.back.bind(this)
@@ -38,13 +41,18 @@ class Player extends Component {
     this.updateTime = this.updateTime.bind(this)
     this.format = this.format.bind(this)
     this.onProgressBarChange = this.onProgressBarChange.bind(this)
+    this.changeMode = this.changeMode.bind(this)
+    this.end = this.end.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.player.currentSong !== this.props.player.currentSong) {
-      this._w_currentSong(nextProps)
+      this._w_currentSongFn(nextProps)
     }
     if (nextProps.player.playing !== this.props.player.playing) {
-      this._w_playing(nextProps)
+      this._w_playingFn(nextProps)
+    }
+    if (nextProps.player.mode !== this.props.player.mode) {
+      this._w_iconModeFn(nextProps)
     }
   }
   enter(el) {
@@ -93,6 +101,31 @@ class Player extends Component {
   }
   open() {
     this.props.setFullScreen(true)
+  }
+  changeMode() {
+    const mode = (this.props.player.mode + 1) % 3
+    this.props.setPlayMode(mode)
+
+    let list = null
+    console.log(mode, playMode)
+    if (mode === playMode.random) {
+      list = shuffle(this.props.player.sequenceList)
+    } else {
+      list = this.props.player.sequenceList
+    }
+    this.props.setPlaylist(list)
+    this.resetCurrentIndex(list)
+  }
+  resetCurrentIndex(list) {
+    let index = list.findIndex(item => {
+      return item.id === this.props.player.currentSong.id
+    })
+    this.props.setCurrentIndex(index)
+    this.props.setCurrentSong(index)
+  }
+  loop() {
+    this.refs.audio.currentTime = 0
+    this.refs.audio.play()
   }
   next() {
     if (!this.state.songReady) {
@@ -147,6 +180,13 @@ class Player extends Component {
   updateTime(e) {
     this.setState({ currentTime: e.target.currentTime })
   }
+  end() {
+    if (this.props.player.mode === playMode.loop) {
+      this.loop()
+    } else {
+      this.next()
+    }
+  }
   format(interval) {
     interval = interval | 0
     const minute = (interval / 60) | 0
@@ -176,17 +216,27 @@ class Player extends Component {
       scale
     }
   }
-  _w_currentSong(nextProps) {
+  _w_currentSongFn(nextProps) {
+    if (nextProps.player.currentSong.id === this.props.player.currentSong.id) {
+      return
+    }
+
     setTimeout(() => {
       this.refs.audio.play()
     }, 20)
   }
-  _w_playing(nextProps) {
+  _w_playingFn(nextProps) {
     const newPlaying = nextProps.player.playing
     const audio = this.refs.audio
     setTimeout(() => {
       newPlaying ? audio.play() : audio.pause()
     }, 20)
+  }
+  _w_iconModeFn(nextProps) {
+    const newMode = nextProps.player.mode
+    const mode =
+      newMode === playMode.sequence ? 'icon-sequence' : newMode === playMode.loop ? 'icon-loop' : 'icon-random'
+    this.setState({ iconMode: mode })
   }
   render() {
     const { player } = this.props
@@ -237,8 +287,8 @@ class Player extends Component {
                 <span className="time time-r">{this.format(currentSong.duration)}</span>
               </div>
               <div className="operators">
-                <div className={classNames(`icon i-left`, this.state.songReady ? '' : 'disable')}>
-                  <i className="icon-sequence" />
+                <div className={classNames(`icon i-left`)} onClick={this.changeMode}>
+                  <i className={this.state.iconMode} />
                 </div>
                 <div className={classNames(`icon i-left`, this.state.songReady ? '' : 'disable')}>
                   <i className="icon-prev" onClick={this.prev} />
@@ -293,6 +343,7 @@ class Player extends Component {
           onCanPlay={this.ready}
           onError={this.error}
           onTimeUpdate={this.updateTime}
+          onEnded={this.end}
         />
       </div>
     )
