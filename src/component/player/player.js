@@ -7,7 +7,9 @@ import { connect } from 'react-redux'
 import { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong, setPlayMode, setPlaylist } from 'store/actions'
 /******* 第三方 组件库 *****/
 import animations from 'create-keyframe-animation'
+import Lyric from 'lyric-parser'
 /**** 本地公用变量 公用函数 **/
+import Scroll from 'component/scroll/scroll'
 import { prefixStyle } from 'common/js/dom'
 import { shuffle } from 'common/js/util'
 import { playMode } from 'common/js/config'
@@ -33,7 +35,9 @@ class Player extends Component {
     this.state = {
       songReady: false,
       currentTime: 0,
-      iconMode: 'icon-sequence'
+      iconMode: 'icon-sequence',
+      currentLyric: null,
+      currentLineNum: 0
     }
 
     this.back = this.back.bind(this)
@@ -50,6 +54,7 @@ class Player extends Component {
     this.onProgressBarChange = this.onProgressBarChange.bind(this)
     this.changeMode = this.changeMode.bind(this)
     this.end = this.end.bind(this)
+    this.handleLyric = this.handleLyric.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.player.currentSong !== this.props.player.currentSong) {
@@ -200,6 +205,26 @@ class Player extends Component {
     const second = this._pad(interval % 60)
     return `${minute}:${second}`
   }
+  getLyric() {
+    let me = this
+    this.props.player.currentSong.getLyric().then(lyric => {
+      this.setState({ currentLyric: new Lyric(lyric, me.handleLyric) })
+      console.log(new Lyric(lyric))
+      if (this.props.player.playing) {
+        this.state.currentLyric.play()
+      }
+    })
+  }
+  handleLyric({lineNum, txt}) {
+    this.setState({ currentLineNum: lineNum })
+    const lyricLines = Array.from(this.refs.lyric.children)
+    if (lineNum > 5) {
+      let lineEl = lyricLines[lineNum - 5]
+      this.refs.lyricList.scrollToElement(lineEl, 1000)
+    } else {
+      this.refs.lyricList.scrollTo(0, 0, 1000)
+    }
+  }
   _pad(num, n = 2) {
     let len = num.toString().length
     while (len < n) {
@@ -230,7 +255,7 @@ class Player extends Component {
 
     setTimeout(() => {
       this.refs.audio.play()
-      this.props.player.currentSong.getLyric()
+      this.getLyric()
     }, 20)
   }
   _w_playingFn(nextProps) {
@@ -282,6 +307,19 @@ class Player extends Component {
                   </div>
                 </div>
               </div>
+              <Scroll className="middle-r" ref="lyricList" data={this.state.currentLyric && this.state.currentLyric.lines}>
+                <div className="lyric-wrapper">
+                  {this.state.currentLyric ? (
+                    <div ref="lyric">
+                      {this.state.currentLyric.lines.map((line, index) => (
+                        <p className={classNames('text', {'current': this.state.currentLineNum === index})} key={line.time + index}>
+                          {line.txt}
+                        </p>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </Scroll>
             </div>
             <div className="bottom">
               <div className="progress-wrapper">

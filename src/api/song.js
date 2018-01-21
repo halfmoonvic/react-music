@@ -36,7 +36,6 @@ export function getLyric(mid) {
     pcachetime: +new Date(),
     format: 'json'
   })
-  console.log(url)
   return axios.get(url, {
     params: data
   }).then((res) => {
