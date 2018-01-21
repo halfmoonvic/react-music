@@ -92,6 +92,7 @@ class ListView extends Component {
     })
 
     forceCheck()
+    // 滚动时调用此方法，让页面变的很卡
   }
   _scrollTo(index) {
     if (!index && index !== 0) {
@@ -108,6 +109,7 @@ class ListView extends Component {
     this.refs.listview.scrollToElement(Array.from(this.refs.listGroup.children)[index], 0)
     // 图片懒加载 强制加载图片
     forceCheck()
+    // 滚动时调用此方法，感觉让页面变的很卡， 但不确定是不是自己的错觉哦
   }
   _calculateHeight() {
     this.listHeight = []

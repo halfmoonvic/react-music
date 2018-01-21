@@ -1,6 +1,7 @@
 import { getVKey } from 'api/song'
 import { getUid } from './uid'
 import { ERR_OK } from 'api/config'
+import { getLyric } from 'api/song'
 
 let urlMap = {}
 
@@ -21,7 +22,6 @@ export default class Song {
     } else {
       this._genUrl()
     }
-
   }
   _genUrl() {
     if (this.url) {
@@ -33,6 +33,13 @@ export default class Song {
         this.url = `http://dl.stream.qqmusic.qq.com/${this.filename}?vkey=${vkey}&guid=${getUid()}&uin=0&fromtag=66`
         urlMap[this.id] = this.url
       }
+    })
+  }
+  getLyric() {
+    getLyric(this.mid).then(res => {
+      console.log(res)
+      this.lyric = res.lyric
+      console.log(this.lyric)
     })
   }
 }

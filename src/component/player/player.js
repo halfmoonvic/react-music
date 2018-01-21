@@ -18,7 +18,14 @@ import ProgressCircle from 'component/progress-circle/progress-circle'
 
 const transform = prefixStyle('transform')
 
-@connect(state => ({ player: state.player }), { setFullScreen, setPlayState, setCurrentIndex, setCurrentSong, setPlayMode, setPlaylist })
+@connect(state => ({ player: state.player }), {
+  setFullScreen,
+  setPlayState,
+  setCurrentIndex,
+  setCurrentSong,
+  setPlayMode,
+  setPlaylist
+})
 class Player extends Component {
   constructor(props) {
     super(props)
@@ -223,6 +230,7 @@ class Player extends Component {
 
     setTimeout(() => {
       this.refs.audio.play()
+      this.props.player.currentSong.getLyric()
     }, 20)
   }
   _w_playingFn(nextProps) {

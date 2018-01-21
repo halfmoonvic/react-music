@@ -25,7 +25,7 @@ Router.get('/list', function(req, res) {
       rnd: '0.36014272788046786'
     }
   }).then(res => {
-    console.log(res.data)
+    // console.log(res.data)
     me.json({
       status: 200,
       data: res.data
@@ -37,5 +37,29 @@ Router.get('/list', function(req, res) {
   // })
 })
 
+Router.get('/api/lyric', function(req, res) {
+  const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+  axios.get(url, {
+    headers: {
+      Referer: 'https://c.y.qq.com/',
+      Host: 'c.y.qq.com'
+    },
+    params: req.query
+  }).then(response => {
+    let ret = response.data
+    if (typeof ret === 'string') {
+      const reg = /^\w+\(({.+})\)$/
+      const matches = ret.match(reg)
+      if (matches) {
+        ret = JSON.parse(matches[1])
+      }
+    }
+    res.json(ret)
+  })
+  // res.json({
+  //   status: 200,
+  //   data: "你好啊"
+  // })
+})
 
 module.exports = Router
