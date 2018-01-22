@@ -39,7 +39,8 @@ class Player extends Component {
       iconMode: 'icon-sequence',
       currentLyric: null,
       currentLineNum: 0,
-      currentShow: 'cd'
+      currentShow: 'cd',
+      playingLyric: ''
     }
 
     this.touch = {}
@@ -144,6 +145,10 @@ class Player extends Component {
   loop() {
     this.refs.audio.currentTime = 0
     this.refs.audio.play()
+
+    if (this.state.currentLyric) {
+      this.state.currentLyric.seek(0)
+    }
   }
   next() {
     if (!this.state.songReady) {
@@ -165,22 +170,34 @@ class Player extends Component {
     if (!this.state.songReady) {
       return
     }
-    let index = this.props.player.currentIndex - 1
-    if (index === -1) {
-      index = this.props.player.playList.length - 1
-    }
-    this.props.setCurrentIndex(index)
-    this.props.setCurrentSong(index)
+    if (this.props.player.playlist.lenth === 1) {
+      this.loop()
+    } else {
+      if (this.props.player.playlist.length === 1) {
+        this.loop()
+      } else {
+        let index = this.props.player.currentIndex - 1
+        if (index === -1) {
+          index = this.props.player.playList.length - 1
+        }
+        this.props.setCurrentIndex(index)
+        this.props.setCurrentSong(index)
 
-    if (!this.props.player.playing) {
-      this.togglePlaying()
+        if (!this.props.player.playing) {
+          this.togglePlaying()
+        }
+        this.setState({ songReady: false })
+      }
     }
-    this.setState({ songReady: false })
   }
   onProgressBarChange(percent) {
+    const currentTime = this.props.player.currentSong.duration * percent
     this.refs.audio.currentTime = this.props.player.currentSong.duration * percent
     if (!this.props.player.playing) {
       this.togglePlaying()
+    }
+    if (this.state.currentLyric) {
+      this.state.currentLyric.seek(currentTime * 1000)
     }
   }
   togglePlaying(e) {
@@ -188,6 +205,10 @@ class Player extends Component {
       e.stopPropagation()
     }
     this.props.setPlayState(!this.props.player.playing)
+
+    if (this.state.currentLyric) {
+      this.state.currentLyric.togglePlay()
+    }
   }
   ready() {
     this.setState({ songReady: true })
@@ -213,12 +234,21 @@ class Player extends Component {
   }
   getLyric() {
     let me = this
-    this.props.player.currentSong.getLyric().then(lyric => {
-      this.setState({ currentLyric: new Lyric(lyric, me.handleLyric) })
-      if (this.props.player.playing) {
-        this.state.currentLyric.play()
-      }
-    })
+    this.props.player.currentSong
+      .getLyric()
+      .then(lyric => {
+        this.setState({ currentLyric: new Lyric(lyric, me.handleLyric) })
+        if (this.props.player.playing) {
+          this.state.currentLyric.play()
+        }
+      })
+      .catch(err => {
+        this.setState({
+          currentLyric: null,
+          playingLyric: null,
+          currentLineNum: 0
+        })
+      })
   }
   handleLyric({ lineNum, txt }) {
     this.setState({ currentLineNum: lineNum })
@@ -229,6 +259,7 @@ class Player extends Component {
     } else {
       this.refs.lyricList.scrollTo(0, 0, 1000)
     }
+    this.setState({ playingLyric: txt })
   }
   middleTouchStart(e) {
     e.stopPropagation()
@@ -312,10 +343,14 @@ class Player extends Component {
       return
     }
 
+    if (this.state.currentLyric) {
+      this.state.currentLyric.stop()
+    }
+
     setTimeout(() => {
       this.refs.audio.play()
       this.getLyric()
-    }, 20)
+    }, 1000)
   }
   _w_playingFn(nextProps) {
     const newPlaying = nextProps.player.playing
@@ -368,6 +403,9 @@ class Player extends Component {
                       className={classNames('image', player.playing ? 'play' : 'play pause')}
                     />
                   </div>
+                </div>
+                <div className="playing-lyric-wrapper">
+                  <div className="playing-lyric">{this.state.playingLyric}</div>
                 </div>
               </div>
               <Scroll
