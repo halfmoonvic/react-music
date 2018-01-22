@@ -19,6 +19,7 @@ import ProgressBar from 'component/progress-bar/progress-bar'
 import ProgressCircle from 'component/progress-circle/progress-circle'
 
 const transform = prefixStyle('transform')
+const transitionDuration = prefixStyle('transitionDuration')
 
 @connect(state => ({ player: state.player }), {
   setFullScreen,
@@ -37,8 +38,11 @@ class Player extends Component {
       currentTime: 0,
       iconMode: 'icon-sequence',
       currentLyric: null,
-      currentLineNum: 0
+      currentLineNum: 0,
+      currentShow: 'cd'
     }
+
+    this.touch = {}
 
     this.back = this.back.bind(this)
     this.open = this.open.bind(this)
@@ -55,6 +59,9 @@ class Player extends Component {
     this.changeMode = this.changeMode.bind(this)
     this.end = this.end.bind(this)
     this.handleLyric = this.handleLyric.bind(this)
+    this.middleTouchStart = this.middleTouchStart.bind(this)
+    this.middleTouchMove = this.middleTouchMove.bind(this)
+    this.middleTouchEnd = this.middleTouchEnd.bind(this)
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.player.currentSong !== this.props.player.currentSong) {
@@ -119,7 +126,6 @@ class Player extends Component {
     this.props.setPlayMode(mode)
 
     let list = null
-    console.log(mode, playMode)
     if (mode === playMode.random) {
       list = shuffle(this.props.player.sequenceList)
     } else {
@@ -209,13 +215,12 @@ class Player extends Component {
     let me = this
     this.props.player.currentSong.getLyric().then(lyric => {
       this.setState({ currentLyric: new Lyric(lyric, me.handleLyric) })
-      console.log(new Lyric(lyric))
       if (this.props.player.playing) {
         this.state.currentLyric.play()
       }
     })
   }
-  handleLyric({lineNum, txt}) {
+  handleLyric({ lineNum, txt }) {
     this.setState({ currentLineNum: lineNum })
     const lyricLines = Array.from(this.refs.lyric.children)
     if (lineNum > 5) {
@@ -224,6 +229,60 @@ class Player extends Component {
     } else {
       this.refs.lyricList.scrollTo(0, 0, 1000)
     }
+  }
+  middleTouchStart(e) {
+    e.stopPropagation()
+    this.touch.initiated = true
+    const touch = e.touches[0]
+    this.touch.startX = touch.pageX
+    this.touch.startY = touch.pageY
+  }
+  middleTouchMove(e) {
+    e.stopPropagation()
+    if (!this.touch.initiated) return
+    const touch = e.touches[0]
+    const deltaX = touch.pageX - this.touch.startX
+    const deltaY = touch.pageY - this.touch.startY
+    // 纵向滚动则什么都不做
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return
+    const left = this.state.currentShow === 'cd' ? 0 : -window.innerWidth
+    const offSetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX))
+    this.touch.percent = Math.abs(offSetWidth / window.innerWidth)
+    // React 当中，通过 this.refs.Instance 方式拿到某个组件的实例。想要获取内部相应的元素，可以在这个 Instance 上面声明 ref，然后拿到这个 ref，这样就与我们平时获取 dom元素差不多了
+    this.refs.lyricList.refs.oScroll.style[transform] = `translate3d(${offSetWidth}px, 0, 0)`
+    this.refs.lyricList.refs.oScroll.style[transitionDuration] = 0
+
+    this.refs.middleL.style.opacity = 1 - this.touch.percent
+    this.refs.middleL.style[transitionDuration] = 0
+  }
+  middleTouchEnd() {
+    let offSetWidth
+    let opacity
+    if (this.state.currentShow === 'cd') {
+      if (this.touch.percent > 0.1) {
+        offSetWidth = -window.innerWidth
+        opacity = 0
+        this.setState({ currentShow: 'lyric' })
+      } else {
+        offSetWidth = 0
+        opacity = 1
+      }
+    } else {
+      if (this.touch.percent < 0.9) {
+        offSetWidth = 0
+        this.setState({ currentShow: 'cd' })
+        opacity = 1
+      } else {
+        offSetWidth = -window.innerWidth
+        opacity = 0
+      }
+    }
+    this.refs.lyricList.refs.oScroll.style[transform] = `translate3d(${offSetWidth}px, 0, 0)`
+    const time = 300
+    this.refs.lyricList.refs.oScroll.style[transitionDuration] = `${time}ms`
+
+    this.refs.middleL.style.opacity = opacity
+    this.refs.middleL.style[transitionDuration] = `${time}ms`
   }
   _pad(num, n = 2) {
     let len = num.toString().length
@@ -295,8 +354,12 @@ class Player extends Component {
               <h1 className="title">{currentSong.name}</h1>
               <h2 className="subtitle">{currentSong.singer}</h2>
             </div>
-            <div className="middle">
-              <div className="middle-l">
+            <div
+              className="middle"
+              onTouchStart={this.middleTouchStart}
+              onTouchMove={this.middleTouchMove}
+              onTouchEnd={this.middleTouchEnd}>
+              <div className="middle-l" ref="middleL">
                 <div className="cd-wrapper" ref="cdWrapper">
                   <div className="cd">
                     <img
@@ -307,12 +370,17 @@ class Player extends Component {
                   </div>
                 </div>
               </div>
-              <Scroll className="middle-r" ref="lyricList" data={this.state.currentLyric && this.state.currentLyric.lines}>
+              <Scroll
+                className="middle-r"
+                ref="lyricList"
+                data={this.state.currentLyric && this.state.currentLyric.lines}>
                 <div className="lyric-wrapper">
                   {this.state.currentLyric ? (
                     <div ref="lyric">
                       {this.state.currentLyric.lines.map((line, index) => (
-                        <p className={classNames('text', {'current': this.state.currentLineNum === index})} key={line.time + index}>
+                        <p
+                          className={classNames('text', { current: this.state.currentLineNum === index })}
+                          key={line.time + index}>
                           {line.txt}
                         </p>
                       ))}
@@ -322,6 +390,10 @@ class Player extends Component {
               </Scroll>
             </div>
             <div className="bottom">
+              <div className="dot-wrapper">
+                <span className={classNames('dot', { active: this.state.currentShow === 'cd' })} />
+                <span className={classNames('dot', { active: this.state.currentShow === 'lyric' })} />
+              </div>
               <div className="progress-wrapper">
                 <span className="time tile-l">{this.format(this.state.currentTime)}</span>
                 <div className="progress-bar-wrapper">
