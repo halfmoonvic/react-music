@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { getSelectSong, getRandomPlay } from 'store/async-actions'
 /******* 第三方 组件库 *****/
 /**** 本地公用变量 公用函数 **/
+import { playlistMixin } from 'common/js/mixin'
 import { prefixStyle } from 'common/js/dom'
 /******* 本地 公用组件 *****/
 import Scroll from 'component/scroll/scroll'
@@ -16,6 +17,7 @@ import SongList from 'component/song-list/song-list'
 const RESERVED_HEIGHT = 40
 const transform = prefixStyle('transform')
 
+@playlistMixin
 @withRouter
 @connect(
   state => ({ player: state.player }), { getSelectSong, getRandomPlay }
@@ -50,6 +52,15 @@ class MusicList extends Component {
   }
   componentDidMount() {
     this.setToBgImage()
+    let timer = null
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      if (this.refs.list) {
+        this.props.handlePlaylist(this.refs.list)
+      }
+    }, 2000)
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.scrollY !== nextState.scrollY) {

@@ -25,21 +25,17 @@ class Scroll extends Component {
     }, 3000)
   }
   componentWillReceiveProps(nextProps) {
+    let me = this
     if (nextProps.top) {
       this.setHeight()
     }
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    let me = this
+
     // 刷新
     if (nextProps.data !== this.props.data) {
       setTimeout(() => {
         me.refresh()
       }, 20)
     }
-
-    //
-    return true
   }
   _initScroll() {
     let me = this
@@ -56,7 +52,6 @@ class Scroll extends Component {
         me.props.scroll(pos)
       })
     }
-
   }
   setHeight() {
     this.refs.oScroll.style.top = this.props.top + 'px'

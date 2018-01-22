@@ -170,10 +170,10 @@ class Player extends Component {
     if (!this.state.songReady) {
       return
     }
-    if (this.props.player.playlist.lenth === 1) {
+    if (this.props.player.playList.lenth === 1) {
       this.loop()
     } else {
-      if (this.props.player.playlist.length === 1) {
+      if (this.props.player.playList.length === 1) {
         this.loop()
       } else {
         let index = this.props.player.currentIndex - 1
@@ -239,7 +239,7 @@ class Player extends Component {
       .then(lyric => {
         this.setState({ currentLyric: new Lyric(lyric, me.handleLyric) })
         if (this.props.player.playing) {
-          this.state.currentLyric.play()
+          this.state.currentLyric.seek(this.state.currentTime * 1000)
         }
       })
       .catch(err => {
