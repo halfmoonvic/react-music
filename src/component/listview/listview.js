@@ -50,21 +50,22 @@ class ListView extends Component {
     if (this.props.data !== nextProps.data) {
       // 加延时 数据的变化到 dom 的更新
       setTimeout(() => { this._calculateHeight() }, 20)
+      return true
     }
     if (this.state.scrollY !== nextState.scrollY) {
       // const newY = nextState.scrollY
-      this._hightLightCurrent(nextProps, nextState)
+      return this._hightLightCurrent(nextProps, nextState)
     }
 
     if (this.state.currentIndex !== nextState.currentIndex) {
-      this._fixTitle(nextProps, nextState)
+      return this._fixTitle(nextProps, nextState)
     }
 
     if (this.state.diff !== nextState.diff) {
-      this._diffTitle(nextProps, nextState)
+      return this._diffTitle(nextProps, nextState)
     }
 
-    return true
+    return false
   }
   onShortcutStart(e) {
     let anchorIndex = getData(e.target, 'index')
@@ -126,6 +127,7 @@ class ListView extends Component {
     this.setState({
       fixedTitle: nextProps.data[nextState.currentIndex] ? nextProps.data[nextState.currentIndex].title : '热门'
     })
+    return true
   }
   _hightLightCurrent(nextProps, nextState) {
     const newY = nextState.scrollY
@@ -133,7 +135,7 @@ class ListView extends Component {
     // 当滚动到顶部， newY > 0
     if (newY > 0) {
       this.setState({ currentIndex: 0 })
-      return
+      return false
     }
     // 在中间部分滚动
     for (let i = 0; i < listHeight.length - 1; i++) {
@@ -142,23 +144,27 @@ class ListView extends Component {
       if (!height2 || (-newY >= height1 && -newY < height2)) {
         this.setState({ diff: height2 + newY })
         this.setState({ currentIndex: i })
-        return
+        return false
       }
     }
 
     // 在底部，且 -newY 大于最后一个元素的上限 第一个减1 是因为 listHeight 多一个 item 的，第二个减一 是因为， currentIndex 是从0 开始的
     this.setState({ currentIndex: listHeight.length - 1 - 1 })
+
+    return false
   }
   _diffTitle(nextProps, nextState) {
     const { diff } = nextState
     let fixedTop = (diff > 0 && diff < TITLE_HEIGHT) ? diff - TITLE_HEIGHT : 0
     if (this.fixedTop === fixedTop) {
-      return
+      return false
     }
     this.fixedTop = fixedTop
     this.refs.fixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`
+    return false
   }
   render() {
+    console.log('render.........')
     return (
       <Scroll className="o-listview"
       ref="listview"
