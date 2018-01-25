@@ -24,7 +24,7 @@ class ListView extends Component {
       shortcutList: [],
       scrollY: -1,
       currentIndex: 0,
-      fixedTitle: '热门',
+      // fixedTitle: '热门',
       diff: -1
     }
 
@@ -36,7 +36,7 @@ class ListView extends Component {
     this.onShortcutMove = this.onShortcutMove.bind(this)
     this.scroll = this.scroll.bind(this)
     this._calculateHeight = this._calculateHeight.bind(this)
-    this._fixTitle = this._fixTitle.bind(this)
+    // this._fixTitle = this._fixTitle.bind(this)
     this._diffTitle = this._diffTitle.bind(this)
   }
   componentWillReceiveProps(nextProps) {
@@ -52,20 +52,26 @@ class ListView extends Component {
       setTimeout(() => { this._calculateHeight() }, 20)
       return true
     }
+
+    if (this.state.currentIndex !== nextState.currentIndex) {
+      // return this._fixTitle(nextProps, nextState)
+      // 因为固定的标题 以及 右侧 的 列表标题 依赖于 currentIndex, 所以 返回 true
+      // 要不然在底部那里写上 retur true 而不是 false。 但是因为中间数据当中有 返回 false的，所以这里 还是要写上 返回 true
+
+      // 所以总结就是，如果数据变化当中 有一个 返回 false 了，那么 所有数据 都需要进行一下判断啊。不然 他老返回 false 别人 还没法更新了！！！
+      return true
+    }
+
     if (this.state.scrollY !== nextState.scrollY) {
       // const newY = nextState.scrollY
       return this._hightLightCurrent(nextProps, nextState)
-    }
-
-    if (this.state.currentIndex !== nextState.currentIndex) {
-      return this._fixTitle(nextProps, nextState)
     }
 
     if (this.state.diff !== nextState.diff) {
       return this._diffTitle(nextProps, nextState)
     }
 
-    return false
+    return true
   }
   onShortcutStart(e) {
     let anchorIndex = getData(e.target, 'index')
@@ -123,12 +129,12 @@ class ListView extends Component {
       this.listHeight.push(height)
     }
   }
-  _fixTitle(nextProps, nextState) {
-    this.setState({
-      fixedTitle: nextProps.data[nextState.currentIndex] ? nextProps.data[nextState.currentIndex].title : '热门'
-    })
-    return true
-  }
+  // _fixTitle(nextProps, nextState) {
+    // this.setState({
+    //   fixedTitle: nextProps.data[nextState.currentIndex] ? nextProps.data[nextState.currentIndex].title : '热门'
+    // })
+    // return true
+  // }
   _hightLightCurrent(nextProps, nextState) {
     const newY = nextState.scrollY
     const listHeight = this.listHeight
@@ -198,7 +204,9 @@ class ListView extends Component {
           )) : null}</ul>
         </div>
         <div className="list-fixed" ref="fixed">
-          {this.state.scrollY < 0 ? <h1 className="fixed-title">{this.state.fixedTitle}</h1> : null}
+          {this.state.scrollY < 0 ? <h1 className="fixed-title">{
+            this.props.data[this.state.currentIndex] ? this.props.data[this.state.currentIndex].title : '热门'
+          }</h1> : null}
         </div>
         {!this.props.data.length ? <div className="loading-container">
           <Loading></Loading>
