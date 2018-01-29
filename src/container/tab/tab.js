@@ -30,6 +30,10 @@ class Tab extends Component {
         url: '/search',
         text: '搜索',
         selected: false
+      }, {
+        url: '/test',
+        text: '测验',
+        selected: false
       }]
     }
   }

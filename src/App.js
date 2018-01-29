@@ -13,6 +13,7 @@ import Player from 'component/player/player'
 /**** 当前组件的 子组件等 ***/
 import Recommend from 'container/recommend/recommend'
 import Singer from 'container/singer/singer'
+import Test from 'container/test/test'
 
 class App extends Component {
   render() {
@@ -30,6 +31,7 @@ class App extends Component {
                 <Redirect path='/' exact to='/recommend'></Redirect>
                 <Route path="/recommend" component={Recommend}></Route>
                 <Route path="/singer" component={Singer}></Route>
+                <Route path="/test" component={Test}></Route>
               </Switch>
             </CSSTransition>
           </TransitionGroup>
